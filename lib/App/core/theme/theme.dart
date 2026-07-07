@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../constants/color_constants.dart';
 
 class SmoothPageTransitionsBuilder extends PageTransitionsBuilder {
@@ -25,10 +26,16 @@ class SmoothPageTransitionsBuilder extends PageTransitionsBuilder {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
 // Light Theme
+// Setting `fontFamily` + `textTheme` here applies Poppins to every single
+// Text widget in the entire app — no per-screen changes needed.
+// ─────────────────────────────────────────────────────────────────────────────
 ThemeData lightTheme = ThemeData(
   useMaterial3: true,
   brightness: Brightness.light,
+  fontFamily: GoogleFonts.poppins().fontFamily,
+  textTheme: GoogleFonts.poppinsTextTheme(ThemeData.light().textTheme),
   colorScheme: const ColorScheme.light(
     primary: AppColors.primaryColor,
     secondary: AppColors.secondaryColor,
@@ -50,11 +57,16 @@ ThemeData lightTheme = ThemeData(
     ),
     color: Colors.white,
   ),
-  appBarTheme: const AppBarTheme(
+  appBarTheme: AppBarTheme(
     backgroundColor: AppColors.primaryColor,
     foregroundColor: Colors.white,
     elevation: 0,
     centerTitle: false,
+    titleTextStyle: GoogleFonts.poppins(
+      color: Colors.white,
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+    ),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
@@ -63,6 +75,7 @@ ThemeData lightTheme = ThemeData(
       elevation: 0,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      textStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14),
     ),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
@@ -71,7 +84,12 @@ ThemeData lightTheme = ThemeData(
       side: const BorderSide(color: AppColors.primaryColor, width: 1.2),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      textStyle: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 14),
     ),
+  ),
+  inputDecorationTheme: InputDecorationTheme(
+    hintStyle: GoogleFonts.poppins(color: Colors.grey.shade400, fontSize: 13),
+    labelStyle: GoogleFonts.poppins(color: Colors.grey.shade600, fontSize: 14),
   ),
   switchTheme: SwitchThemeData(
     thumbColor: WidgetStateProperty.resolveWith((states) {
@@ -85,12 +103,40 @@ ThemeData lightTheme = ThemeData(
       return Colors.grey.shade200;
     }),
   ),
+  dialogTheme: DialogThemeData(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    elevation: 0,
+    backgroundColor: Colors.white,
+    titleTextStyle: GoogleFonts.poppins(
+      color: Colors.black,
+      fontSize: 17,
+      fontWeight: FontWeight.w700,
+    ),
+    contentTextStyle: GoogleFonts.poppins(
+      color: const Color(0xFF6B7280),
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+    ),
+  ),
+  snackBarTheme: SnackBarThemeData(
+    behavior: SnackBarBehavior.floating,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    backgroundColor: const Color(0xFF1F2937),
+    contentTextStyle: GoogleFonts.poppins(color: Colors.white, fontSize: 13),
+  ),
+  chipTheme: ChipThemeData(
+    labelStyle: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500),
+  ),
 );
 
+// ─────────────────────────────────────────────────────────────────────────────
 // Dark Theme
+// ─────────────────────────────────────────────────────────────────────────────
 ThemeData darkTheme = ThemeData(
   useMaterial3: true,
   brightness: Brightness.dark,
+  fontFamily: GoogleFonts.poppins().fontFamily,
+  textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
   colorScheme: const ColorScheme.dark(
     primary: AppColors.primaryColor,
     secondary: AppColors.secondaryColor,
