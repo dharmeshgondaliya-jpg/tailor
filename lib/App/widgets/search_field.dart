@@ -44,8 +44,18 @@ class _SearchFieldState extends State<SearchField> {
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.grey.shade300,
-          suffixIconConstraints: BoxConstraints(maxWidth: height, minWidth: height, maxHeight: height, minHeight: height),
-          constraints: BoxConstraints(minWidth: double.maxFinite, maxWidth: double.maxFinite, maxHeight: height, minHeight: height),
+          suffixIconConstraints: BoxConstraints(
+            maxWidth: height,
+            minWidth: height,
+            maxHeight: height,
+            minHeight: height,
+          ),
+          constraints: BoxConstraints(
+            minWidth: double.maxFinite,
+            maxWidth: double.maxFinite,
+            maxHeight: height,
+            minHeight: height,
+          ),
           contentPadding: const EdgeInsets.only(left: 10, right: 10),
           hintText: "Search...",
           prefixIcon: const Icon(Icons.search_outlined),
@@ -67,10 +77,22 @@ class _SearchFieldState extends State<SearchField> {
                   ),
                 )
               : null,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
-          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
-          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
-          disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide.none,
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide.none,
+          ),
         ),
         onChanged: (value) {
           onTextChange(value.trim());

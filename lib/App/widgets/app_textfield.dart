@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tailor/App/core/constants/color_constants.dart';
 
 class AppTextField extends StatelessWidget {
   AppTextField({
     super.key,
-    this.height = 40,
+    this.height,
     this.width = double.infinity,
     this.autofocus = false,
     this.controller,
@@ -37,7 +38,7 @@ class AppTextField extends StatelessWidget {
     this.textFieldborder,
   });
   final double width;
-  final double height;
+  final double? height;
   final bool autofocus;
   final TextEditingController? controller;
   final bool? enabled;
@@ -69,61 +70,74 @@ class AppTextField extends StatelessWidget {
   final InputBorder? textFieldErrorborder;
 
   final InputBorder border = OutlineInputBorder(
-    borderRadius: BorderRadius.circular(5),
-    borderSide: const BorderSide(color: Colors.black54, width: 0.8),
+    borderRadius: BorderRadius.circular(12),
+    borderSide: BorderSide(color: Colors.grey.shade300, width: 0.8),
+  );
+  final InputBorder focusedBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(12),
+    borderSide: const BorderSide(color: AppColors.primaryColor, width: 1.5),
   );
   final InputBorder errorBorder = OutlineInputBorder(
-    borderRadius: BorderRadius.circular(5),
+    borderRadius: BorderRadius.circular(12),
     borderSide: const BorderSide(color: Colors.red, width: 0.8),
   );
 
   @override
   Widget build(BuildContext context) {
+    Widget textFormField = TextFormField(
+      autofocus: autofocus,
+      controller: controller,
+      cursorColor: Theme.of(context).colorScheme.primary,
+      enabled: enabled,
+      focusNode: focusNode,
+      inputFormatters: inputFormatters,
+      keyboardType: keyboardType,
+      maxLength: maxLength,
+      maxLines: maxLines,
+      minLines: minLines,
+      obscureText: obscureText,
+      onChanged: onChanged,
+      onEditingComplete: onEditingComplete,
+      onSaved: onSaved,
+      onFieldSubmitted: onFieldSubmitted,
+      onTap: onTap,
+      readOnly: readOnly,
+      style: style ?? const TextStyle(fontSize: 14),
+      textAlignVertical: TextAlignVertical.center,
+      textInputAction: textInputAction,
+      validator: validator,
+      decoration: InputDecoration(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        counterText: "",
+        errorStyle: errorStyle,
+        fillColor: fillColor ?? Colors.grey.shade50,
+        filled: true,
+        hintStyle: hintStyle ?? TextStyle(color: Colors.grey.shade400, fontSize: 13),
+        hintText: hintText,
+        prefix: prefix,
+        prefixIcon: prefixIcon,
+        suffix: suffix,
+        suffixIcon: suffixIcon,
+        border: textFieldborder ?? border,
+        enabledBorder: textFieldborder ?? border,
+        focusedBorder: textFieldborder ?? focusedBorder,
+        disabledBorder: textFieldborder ?? border,
+        errorBorder: textFieldErrorborder ?? errorBorder,
+        focusedErrorBorder: textFieldErrorborder ?? errorBorder,
+      ),
+    );
+
+    if (height != null) {
+      return SizedBox(
+        width: width,
+        height: height,
+        child: textFormField,
+      );
+    }
+
     return SizedBox(
       width: width,
-      height: height,
-      child: TextFormField(
-        autofocus: autofocus,
-        controller: controller,
-        cursorColor: Theme.of(context).colorScheme.primary,
-        enabled: enabled,
-        focusNode: focusNode,
-        inputFormatters: inputFormatters,
-        keyboardType: keyboardType,
-        maxLength: maxLength,
-        maxLines: maxLines,
-        minLines: minLines,
-        obscureText: obscureText,
-        onChanged: onChanged,
-        onEditingComplete: onEditingComplete,
-        onSaved: onSaved,
-        onFieldSubmitted: onFieldSubmitted,
-        onTap: onTap,
-        readOnly: readOnly,
-        style: style,
-        textAlignVertical: TextAlignVertical.center,
-        textInputAction: textInputAction,
-        validator: validator,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-          counterText: "",
-          errorStyle: errorStyle,
-          fillColor: fillColor,
-          filled: false,
-          hintStyle: hintStyle,
-          hintText: hintText,
-          prefix: prefix,
-          prefixIcon: prefixIcon,
-          suffix: suffix,
-          suffixIcon: suffixIcon,
-          border: textFieldborder ?? border,
-          enabledBorder: textFieldborder ?? border,
-          focusedBorder: textFieldborder ?? border,
-          disabledBorder: textFieldborder ?? border,
-          errorBorder: textFieldErrorborder ?? errorBorder,
-          focusedErrorBorder: textFieldErrorborder ?? errorBorder,
-        ),
-      ),
+      child: textFormField,
     );
   }
 }

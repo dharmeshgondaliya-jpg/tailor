@@ -41,44 +41,50 @@ class HomeScreen extends StatekitView<HomeScreenController> implements HomeScree
       body: StateBuilder<HomeScreenController>(
         controller: controller,
         builder: (context, controller, child) {
-          return switch (controller.selectedIndex) {
-            0 => DashboardPage(),
-            1 => OrdersPage(),
-            2 => CustomersPage(),
-            3 => ProfilePage(),
-            _ => DashboardPage(),
-          };
+          return AnimatedSwitcher(
+            duration: Duration(milliseconds: 400),
+            child: switch (controller.selectedIndex) {
+              0 => DashboardPage(),
+              1 => OrdersPage(),
+              2 => CustomersPage(),
+              3 => ProfilePage(),
+              _ => DashboardPage(),
+            },
+          );
         },
       ),
       bottomNavigationBar: StateBuilder<HomeScreenController>(
         controller: controller,
         builder: (context, controller, child) {
-          return BottomNavigationBar(
-            currentIndex: controller.selectedIndex,
-            onTap: controller.changeIndex,
-            type: BottomNavigationBarType.fixed,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.dashboard_outlined),
-                activeIcon: Icon(Icons.dashboard),
-                label: 'Dashboard',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag_outlined),
-                activeIcon: Icon(Icons.shopping_bag),
-                label: 'Orders',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.people_outlined),
-                activeIcon: Icon(Icons.people),
-                label: 'Customers',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline),
-                activeIcon: Icon(Icons.person),
-                label: 'Profile',
-              ),
-            ],
+          return AnimatedSwitcher(
+            duration: Duration(milliseconds: 400),
+            child: BottomNavigationBar(
+              currentIndex: controller.selectedIndex,
+              onTap: controller.changeIndex,
+              type: BottomNavigationBarType.fixed,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.dashboard_outlined),
+                  activeIcon: Icon(Icons.dashboard),
+                  label: 'Dashboard',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.shopping_bag_outlined),
+                  activeIcon: Icon(Icons.shopping_bag),
+                  label: 'Orders',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.people_outlined),
+                  activeIcon: Icon(Icons.people),
+                  label: 'Customers',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person_outline),
+                  activeIcon: Icon(Icons.person),
+                  label: 'Profile',
+                ),
+              ],
+            ),
           );
         },
       ),

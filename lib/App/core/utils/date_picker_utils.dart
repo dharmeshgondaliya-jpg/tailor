@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 extension DatePickerUtils on BuildContext {
-  Future<DateTime?> selectDate({DateTime? firstDate, DateTime? lastDate, DateTime? initialDate}) async {
+  Future<DateTime?> selectDate({
+    DateTime? firstDate,
+    DateTime? lastDate,
+    DateTime? initialDate,
+  }) async {
     return await showDatePicker(
       context: this,
       firstDate: firstDate ?? DateTime.now(),
