@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:statekit/statekit.dart';
 import '../../clothes_listing_screen/model/cloth_model.dart';
 import '../../clothes_listing_screen/repository/clothes_listing_screen_repository.dart';
@@ -22,6 +23,7 @@ class AddPairsScreenController extends StateController<AddPairsScreenBinding> {
   }
 
   void toggleClothSelection(ClothModel cloth) {
+    HapticFeedback.lightImpact();
     final index = selectedClothes.indexWhere((c) => c.id == cloth.id);
     if (index >= 0) {
       selectedClothes.removeAt(index);
@@ -32,6 +34,7 @@ class AddPairsScreenController extends StateController<AddPairsScreenBinding> {
   }
 
   void savePair(BuildContext context) {
+    HapticFeedback.mediumImpact();
     final pairName = nameController.text.trim();
     if (pairName.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(

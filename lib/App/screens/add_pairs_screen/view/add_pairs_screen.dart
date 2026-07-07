@@ -49,7 +49,7 @@ class AddPairsScreen extends StatekitView<AddPairsScreenController> implements A
                       AppTextField(
                         controller: controller.nameController,
                         hintText: "e.g. Office Wear, Casual Set",
-                        textInputAction: TextInputAction.next,
+                        textInputAction: TextInputAction.done,
                       ),
                       const SizedBox(height: 24),
 

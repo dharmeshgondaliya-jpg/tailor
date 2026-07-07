@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:statekit/statekit.dart';
 import '../../customers_page/model/customer_model.dart';
 import '../repository/add_customer_screen_repository.dart';
@@ -15,11 +16,13 @@ class AddCustomerScreenController extends StateController<AddCustomerScreenBindi
   bool isRegular = false;
 
   void toggleRegular(bool value) {
+    HapticFeedback.lightImpact();
     isRegular = value;
     update();
   }
 
   void saveCustomer(BuildContext context) {
+    HapticFeedback.mediumImpact();
     final name = nameController.text.trim();
     final phone = phoneController.text.trim();
     final address = addressController.text.trim();

@@ -122,6 +122,7 @@ class AddOrderScreen extends StatekitView<AddOrderScreenController>
                                   controller: controller.quantityController,
                                   hintText: "1",
                                   keyboardType: TextInputType.number,
+                                  textInputAction: TextInputAction.next,
                                 ),
                               ],
                             ),
@@ -148,6 +149,7 @@ class AddOrderScreen extends StatekitView<AddOrderScreenController>
                                   keyboardType: const TextInputType.numberWithOptions(
                                     decimal: true,
                                   ),
+                                  textInputAction: TextInputAction.next,
                                 ),
                               ],
                             ),
@@ -168,6 +170,7 @@ class AddOrderScreen extends StatekitView<AddOrderScreenController>
                                   keyboardType: const TextInputType.numberWithOptions(
                                     decimal: true,
                                   ),
+                                  textInputAction: TextInputAction.next,
                                 ),
                               ],
                             ),
@@ -226,6 +229,7 @@ class AddOrderScreen extends StatekitView<AddOrderScreenController>
                         hintText: "Special stitching instructions...",
                         height: 80,
                         maxLines: 3,
+                        textInputAction: TextInputAction.done,
                       ),
                     ],
                   ),

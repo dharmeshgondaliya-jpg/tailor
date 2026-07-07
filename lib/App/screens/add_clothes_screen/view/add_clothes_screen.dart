@@ -99,6 +99,9 @@ class AddClothesScreen extends StatekitView<AddClothesScreenController>
                                     child: AppTextField(
                                       controller: field.nameController,
                                       hintText: "e.g. Length, Waist",
+                                      textInputAction: index == controller.fields.length - 1
+                                          ? TextInputAction.done
+                                          : TextInputAction.next,
                                     ),
                                   ),
                                   const SizedBox(width: 8),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:statekit/statekit.dart';
 import '../../clothes_listing_screen/model/cloth_model.dart';
 import '../repository/add_clothes_screen_repository.dart';
@@ -45,11 +46,13 @@ class AddClothesScreenController extends StateController<AddClothesScreenBinding
   }
 
   void addField() {
+    HapticFeedback.lightImpact();
     fields.add(MeasurementFieldEdit(nameController: TextEditingController(), type: "inches"));
     update();
   }
 
   void removeField(int index) {
+    HapticFeedback.lightImpact();
     if (index >= 0 && index < fields.length) {
       fields[index].dispose();
       fields.removeAt(index);
@@ -65,6 +68,7 @@ class AddClothesScreenController extends StateController<AddClothesScreenBinding
   }
 
   void saveCloth(BuildContext context) {
+    HapticFeedback.mediumImpact();
     final clothName = nameController.text.trim();
     if (clothName.isEmpty) {
       ScaffoldMessenger.of(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:statekit/statekit.dart';
 import 'package:tailor/App/routes/app_routes.dart';
 import '../../customers_page/model/customer_model.dart';
@@ -61,17 +62,20 @@ class AddOrderScreenController extends StateController<AddOrderScreenBinding> {
   }
 
   void toggleUrgent(bool value) {
+    HapticFeedback.lightImpact();
     isUrgent = value;
     update();
   }
 
   void selectCustomer(CustomerModel? customer) {
+    HapticFeedback.lightImpact();
     selectedCustomer = customer;
     selectedMeasurement = null;
     update();
   }
 
   void toggleClothSelection(ClothModel cloth, bool selected) {
+    HapticFeedback.lightImpact();
     if (selected) {
       if (!selectedClothes.any((c) => c.name == cloth.name)) {
         selectedClothes.add(cloth);
@@ -84,6 +88,7 @@ class AddOrderScreenController extends StateController<AddOrderScreenBinding> {
   }
 
   void togglePairSelection(PairModel pair, bool selected) {
+    HapticFeedback.lightImpact();
     if (selected) {
       if (!selectedPairs.any((p) => p.name == pair.name)) {
         selectedPairs.add(pair);
@@ -96,6 +101,7 @@ class AddOrderScreenController extends StateController<AddOrderScreenBinding> {
   }
 
   void updateStatus(String val) {
+    HapticFeedback.lightImpact();
     status = val;
     update();
   }
@@ -197,6 +203,7 @@ class AddOrderScreenController extends StateController<AddOrderScreenBinding> {
   }
 
   void saveOrder(BuildContext context) {
+    HapticFeedback.mediumImpact();
     final customer = selectedCustomer;
     final laborText = laborCostController.text.trim();
     final qtyText = quantityController.text.trim();
