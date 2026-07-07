@@ -236,6 +236,9 @@ class AddOrderScreenController extends StateController<AddOrderScreenBinding> {
       return;
     }
 
+    final advanceText = advanceAmountController.text.trim();
+    final advanceVal = double.tryParse(advanceText) ?? 0.0;
+
     final order = OrderModel(
       orderNumber: "#ORD-${DateTime.now().millisecondsSinceEpoch % 100000}",
       customerName: customer.name,
@@ -243,6 +246,8 @@ class AddOrderScreenController extends StateController<AddOrderScreenBinding> {
       orderDate: orderDate,
       completionDate: completionDate,
       laborCost: double.parse(laborText),
+      advanceAmount: advanceVal,
+      isUrgent: isUrgent,
       quantity: int.parse(qtyText),
       clothesName: getSelectedItemsNames(),
       notes: notesController.text.trim().isEmpty ? null : notesController.text.trim(),

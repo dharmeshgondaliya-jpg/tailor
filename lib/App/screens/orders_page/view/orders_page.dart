@@ -494,6 +494,29 @@ class OrderCard extends StatelessWidget {
                     style: AppTextStyle.mediumBlack(fontSize: 12).copyWith(color: statusTextColor),
                   ),
                 ),
+                if (order.isUrgent) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.flash_on_rounded, size: 14, color: Colors.red.shade700),
+                        const SizedBox(width: 4),
+                        Text(
+                          "Urgent",
+                          style: AppTextStyle.mediumBlack(
+                            fontSize: 12,
+                          ).copyWith(color: Colors.red.shade700),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
                 if (order.isOverdue) ...[
                   const SizedBox(width: 8),
                   Container(
@@ -529,16 +552,16 @@ class OrderCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Labor Cost",
+                      "Labour / Paid",
                       style: AppTextStyle.regularBlack(
                         fontSize: 12,
                       ).copyWith(color: Colors.grey.shade500),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "\$${order.laborCost.toStringAsFixed(2)}",
+                      "₹${order.laborCost.toStringAsFixed(0)} (Paid ₹${order.advanceAmount.toStringAsFixed(0)})",
                       style: AppTextStyle.boldBlack(
-                        fontSize: 15,
+                        fontSize: 14,
                       ).copyWith(color: AppColors.primaryColor),
                     ),
                   ],
@@ -554,7 +577,7 @@ class OrderCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "${order.quantity} Pairs (${order.clothesName})",
+                      "${order.quantity} x (${order.clothesName})",
                       style: AppTextStyle.semiBoldBlack(fontSize: 14),
                     ),
                   ],

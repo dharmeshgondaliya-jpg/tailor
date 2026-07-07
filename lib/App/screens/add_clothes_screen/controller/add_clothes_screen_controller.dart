@@ -22,6 +22,11 @@ class AddClothesScreenController extends StateController<AddClothesScreenBinding
   final List<MeasurementFieldEdit> fields = [];
 
   void initData() {
+    nameController.clear();
+    for (final field in fields) {
+      field.dispose();
+    }
+    fields.clear();
     // Initially 3 fields with 'inches' type
     fields.addAll([
       MeasurementFieldEdit(

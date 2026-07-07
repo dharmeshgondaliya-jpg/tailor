@@ -9,6 +9,8 @@ class OrdersPageRepository {
       orderDate: DateTime.now().subtract(const Duration(days: 3)),
       completionDate: DateTime.now().add(const Duration(days: 2)),
       laborCost: 45.0,
+      advanceAmount: 10.0,
+      isUrgent: true,
       quantity: 2,
       clothesName: "Shirt & Pant",
       notes: "Short sleeves on the shirt.",
@@ -20,6 +22,8 @@ class OrdersPageRepository {
       orderDate: DateTime.now().subtract(const Duration(days: 5)),
       completionDate: DateTime.now().subtract(const Duration(days: 1)), // Overdue
       laborCost: 120.0,
+      advanceAmount: 50.0,
+      isUrgent: false,
       quantity: 1,
       clothesName: "Wedding Suit",
       notes: "Add extra pockets inside the jacket.",
@@ -31,6 +35,8 @@ class OrdersPageRepository {
       orderDate: DateTime.now().subtract(const Duration(days: 10)),
       completionDate: DateTime.now().subtract(const Duration(days: 3)),
       laborCost: 80.0,
+      advanceAmount: 80.0,
+      isUrgent: false,
       quantity: 3,
       clothesName: "Kurtas",
       notes: null,
@@ -42,6 +48,8 @@ class OrdersPageRepository {
       orderDate: DateTime.now().subtract(const Duration(days: 1)),
       completionDate: DateTime.now().add(const Duration(days: 5)),
       laborCost: 60.0,
+      advanceAmount: 20.0,
+      isUrgent: false,
       quantity: 2,
       clothesName: "Salwar Kameez",
       notes: "Needs lace borders on the dupatta.",
@@ -53,6 +61,8 @@ class OrdersPageRepository {
       orderDate: DateTime.now().subtract(const Duration(days: 7)),
       completionDate: DateTime.now().subtract(const Duration(days: 4)),
       laborCost: 50.0,
+      advanceAmount: 0.0,
+      isUrgent: false,
       quantity: 1,
       clothesName: "Jeans Alteration",
       notes: "Shorten length by 2 inches.",
@@ -64,6 +74,8 @@ class OrdersPageRepository {
       orderDate: DateTime.now().subtract(const Duration(days: 2)),
       completionDate: DateTime.now(),
       laborCost: 150.0,
+      advanceAmount: 50.0,
+      isUrgent: true,
       quantity: 4,
       clothesName: "Shirts",
       notes: "Different colors, regular fit.",
@@ -79,6 +91,6 @@ class OrdersPageRepository {
   }
 
   void deleteOrder(OrderModel order) {
-    _orders.remove(order);
+    _orders.removeWhere((o) => o.orderNumber == order.orderNumber);
   }
 }

@@ -5,6 +5,8 @@ class OrderModel {
   final DateTime orderDate;
   final DateTime completionDate;
   final double laborCost;
+  final double advanceAmount;
+  final bool isUrgent;
   final int quantity;
   final String clothesName;
   final String? notes;
@@ -16,6 +18,8 @@ class OrderModel {
     required this.orderDate,
     required this.completionDate,
     required this.laborCost,
+    this.advanceAmount = 0.0,
+    this.isUrgent = false,
     required this.quantity,
     required this.clothesName,
     this.notes,
