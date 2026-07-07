@@ -21,48 +21,74 @@ class AppDrawer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Drawer Header
-          UserAccountsDrawerHeader(
+          // Modern Premium Drawer Header
+          Container(
+            padding: const EdgeInsets.only(top: 60, bottom: 24, left: 24, right: 24),
             decoration: const BoxDecoration(
-              color: AppColors.primaryColor,
-            ),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Text(
-                initial,
-                style: AppTextStyle.boldBlack(fontSize: 28).copyWith(
-                  color: AppColors.primaryColor,
-                ),
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.primaryColor,
+                  AppColors.secondaryColor,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(24),
               ),
             ),
-            accountName: Text(
-              "$userFirstName $userLastName",
-              style: AppTextStyle.boldBlack(fontSize: 16).copyWith(color: Colors.white),
-            ),
-            accountEmail: Text(
-              userEmail,
-              style: AppTextStyle.regularBlack(fontSize: 14).copyWith(color: Colors.white.withValues(alpha: 0.8)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Avatar representation
+                Container(
+                  width: 68,
+                  height: 68,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    initial,
+                    style: AppTextStyle.boldBlack(fontSize: 26, color: AppColors.primaryColor),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // User Details
+                Text(
+                  "$userFirstName $userLastName",
+                  style: AppTextStyle.boldBlack(fontSize: 18, color: Colors.white),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  userEmail,
+                  style: AppTextStyle.regularBlack(fontSize: 13, color: Colors.white70),
+                ),
+              ],
             ),
           ),
+          const SizedBox(height: 16),
 
-          // Menu Items
-          ListTile(
-            leading: const Icon(Icons.checkroom, color: Colors.black87),
-            title: Text(
-              "Clothes",
-              style: AppTextStyle.mediumBlack(fontSize: 14),
-            ),
+          // Menu Listing
+          _buildDrawerItem(
+            icon: Icons.checkroom_rounded,
+            label: "Clothes",
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, Routes.clothesListingScreen);
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.style, color: Colors.black87),
-            title: Text(
-              "Cloth Pairs",
-              style: AppTextStyle.mediumBlack(fontSize: 14),
-            ),
+          _buildDrawerItem(
+            icon: Icons.style_rounded,
+            label: "Cloth Pairs",
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, Routes.pairsListingScreen);
@@ -70,22 +96,46 @@ class AppDrawer extends StatelessWidget {
           ),
 
           const Spacer(),
-          const Divider(),
+          const Divider(height: 1, indent: 20, endIndent: 20),
 
           // Logout Item
-          ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red),
-            title: Text(
-              "Logout",
-              style: AppTextStyle.mediumBlack(fontSize: 14).copyWith(color: Colors.red),
-            ),
+          _buildDrawerItem(
+            icon: Icons.logout_rounded,
+            label: "Logout",
+            iconColor: Colors.red.shade600,
+            textColor: Colors.red.shade600,
             onTap: () {
               Navigator.pop(context); // Close drawer
               _showLogoutConfirmation(context);
             },
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    Color? iconColor,
+    Color? textColor,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      child: ListTile(
+        leading: Icon(icon, color: iconColor ?? const Color(0xFF374151), size: 20),
+        title: Text(
+          label,
+          style: AppTextStyle.mediumBlack(
+            fontSize: 14,
+            color: textColor ?? const Color(0xFF111827),
+          ),
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        hoverColor: AppColors.primaryColor.withValues(alpha: 0.05),
+        onTap: onTap,
       ),
     );
   }
@@ -101,15 +151,16 @@ class AppDrawer extends StatelessWidget {
           ),
           content: Text(
             "Are you sure you want to log out?",
-            style: AppTextStyle.regularBlack(fontSize: 14).copyWith(color: Colors.grey.shade700),
+            style: AppTextStyle.regularBlack(fontSize: 14, color: const Color(0xFF4B5563)),
           ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text(
                 "Cancel",
-                style: AppTextStyle.mediumBlack(fontSize: 14).copyWith(color: Colors.grey),
+                style: AppTextStyle.mediumBlack(fontSize: 14, color: Colors.grey.shade600),
               ),
             ),
             ElevatedButton(
@@ -122,12 +173,13 @@ class AppDrawer extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                backgroundColor: Colors.red.shade600,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               ),
               child: Text(
                 "Logout",
-                style: AppTextStyle.mediumBlack(fontSize: 14).copyWith(color: Colors.white),
+                style: AppTextStyle.mediumBlack(fontSize: 14, color: Colors.white),
               ),
             ),
           ],

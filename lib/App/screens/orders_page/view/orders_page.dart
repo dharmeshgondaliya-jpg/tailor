@@ -4,6 +4,7 @@ import 'package:statekit/statekit.dart';
 import 'package:tailor/App/core/constants/color_constants.dart';
 import 'package:tailor/App/core/utils/app_text_style.dart';
 import 'package:tailor/App/core/utils/date_picker_utils.dart';
+import '../../../widgets/animated_list_item.dart';
 import '../../../widgets/app_checkbox.dart';
 import '../../../widgets/empty_view.dart';
 import '../../../widgets/search_field.dart';
@@ -102,9 +103,12 @@ class OrdersPage extends StatekitView<OrdersPageController> implements OrdersPag
       padding: const EdgeInsets.only(bottom: 80), // padding to prevent overlap with FAB
       itemBuilder: (context, index) {
         final order = controller.filteredOrders[index];
-        return OrderCard(
-          order: order,
-          onDelete: () => _showOrderDeleteConfirmation(context, order),
+        return AnimatedListItem(
+          index: index,
+          child: OrderCard(
+            order: order,
+            onDelete: () => _showOrderDeleteConfirmation(context, order),
+          ),
         );
       },
     );

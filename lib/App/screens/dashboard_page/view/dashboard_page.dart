@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:statekit/statekit.dart';
 import 'package:tailor/App/core/constants/color_constants.dart';
 import 'package:tailor/App/core/utils/app_text_style.dart';
+import '../../../widgets/animated_list_item.dart';
 import '../binding/dashboard_page_binding.dart';
 import '../controller/dashboard_page_controller.dart';
 import '../../orders_page/model/order_model.dart';
@@ -251,61 +252,65 @@ class DashboardPage extends StatekitView<DashboardPageController> implements Das
     }
 
     return Column(
-      children: activeList.map((order) {
-        return Card(
-          elevation: 0,
-          margin: const EdgeInsets.only(bottom: 8),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-            side: BorderSide(color: Colors.grey.shade200),
-          ),
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(order.customerName, style: AppTextStyle.boldBlack(fontSize: 14)),
-                Text(order.orderNumber, style: AppTextStyle.regularBlack(fontSize: 12).copyWith(color: Colors.grey)),
-              ],
+      children: List.generate(activeList.length, (index) {
+        final order = activeList[index];
+        return AnimatedListItem(
+          index: index,
+          child: Card(
+            elevation: 0,
+            margin: const EdgeInsets.only(bottom: 8),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+              side: BorderSide(color: Colors.grey.shade200),
             ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 4),
-                Text(
-                  order.clothesName,
-                  style: AppTextStyle.regularBlack(fontSize: 13).copyWith(color: Colors.grey.shade600),
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Delivery: ${DateFormat('dd MMM').format(order.completionDate)}",
-                      style: const TextStyle(fontSize: 11, color: Colors.redAccent, fontWeight: FontWeight.bold),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: _getStatusColor(order.status).withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(4),
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(order.customerName, style: AppTextStyle.boldBlack(fontSize: 14)),
+                  Text(order.orderNumber, style: AppTextStyle.regularBlack(fontSize: 12).copyWith(color: Colors.grey)),
+                ],
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 4),
+                  Text(
+                    order.clothesName,
+                    style: AppTextStyle.regularBlack(fontSize: 13).copyWith(color: Colors.grey.shade600),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Delivery: ${DateFormat('dd MMM').format(order.completionDate)}",
+                        style: const TextStyle(fontSize: 11, color: Colors.redAccent, fontWeight: FontWeight.bold),
                       ),
-                      child: Text(
-                        order.status,
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: _getStatusColor(order.status),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: _getStatusColor(order.status).withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          order.status,
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: _getStatusColor(order.status),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );
-      }).toList(),
+      }),
     );
   }
 

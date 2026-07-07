@@ -6,6 +6,7 @@ import '../../base_screen/view/base_screen.dart';
 import '../../base_screen/view/custom_appbar.dart';
 import '../../../widgets/empty_view.dart';
 import '../../../widgets/search_field.dart';
+import '../../../widgets/animated_list_item.dart';
 import '../binding/pairs_listing_screen_binding.dart';
 import '../controller/pairs_listing_screen_controller.dart';
 import '../model/pair_model.dart';
@@ -78,7 +79,10 @@ class PairsListingScreen extends StatekitView<PairsListingScreenController> impl
       padding: const EdgeInsets.only(bottom: 80),
       itemBuilder: (context, index) {
         final pair = controller.filteredPairs[index];
-        return PairCard(pair: pair);
+        return AnimatedListItem(
+          index: index,
+          child: PairCard(pair: pair),
+        );
       },
     );
   }

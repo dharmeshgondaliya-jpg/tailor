@@ -110,9 +110,7 @@ class AddOrderScreen extends StatekitView<AddOrderScreenController>
                       // ── 5. Status and Quantity ────────────────────────────
                       Row(
                         children: [
-                          Expanded(
-                            child: _StatusDropdown(controller: controller),
-                          ),
+                          Expanded(child: _StatusDropdown(controller: controller)),
                           const SizedBox(width: 16),
                           Expanded(
                             child: Column(
@@ -139,12 +137,17 @@ class AddOrderScreen extends StatekitView<AddOrderScreenController>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Labor Cost (₹)', style: AppTextStyle.semiBoldBlack(fontSize: 14)),
+                                Text(
+                                  'Labor Cost (₹)',
+                                  style: AppTextStyle.semiBoldBlack(fontSize: 14),
+                                ),
                                 const SizedBox(height: 8),
                                 AppTextField(
                                   controller: controller.laborCostController,
                                   hintText: "e.g. 500",
-                                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                  keyboardType: const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
                                 ),
                               ],
                             ),
@@ -154,12 +157,17 @@ class AddOrderScreen extends StatekitView<AddOrderScreenController>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Advance Paid (₹)', style: AppTextStyle.semiBoldBlack(fontSize: 14)),
+                                Text(
+                                  'Advance Paid (₹)',
+                                  style: AppTextStyle.semiBoldBlack(fontSize: 14),
+                                ),
                                 const SizedBox(height: 8),
                                 AppTextField(
                                   controller: controller.advanceAmountController,
                                   hintText: "e.g. 200",
-                                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                  keyboardType: const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
                                 ),
                               ],
                             ),
@@ -187,10 +195,17 @@ class AddOrderScreen extends StatekitView<AddOrderScreenController>
                                     color: Colors.red.shade50,
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: Icon(Icons.flash_on_rounded, size: 16, color: Colors.red.shade600),
+                                  child: Icon(
+                                    Icons.flash_on_rounded,
+                                    size: 16,
+                                    color: Colors.red.shade600,
+                                  ),
                                 ),
                                 const SizedBox(width: 10),
-                                Text("Urgent Order", style: AppTextStyle.semiBoldBlack(fontSize: 14)),
+                                Text(
+                                  "Urgent Order",
+                                  style: AppTextStyle.semiBoldBlack(fontSize: 14),
+                                ),
                               ],
                             ),
                             Switch(
@@ -244,10 +259,7 @@ class AddOrderScreen extends StatekitView<AddOrderScreenController>
   // ─────────────────────────────────────────────────────────────────────────
   // Item Picker Bottom Sheet
   // ─────────────────────────────────────────────────────────────────────────
-  void _showItemPickerBottomSheet(
-    BuildContext context,
-    AddOrderScreenController ctrl,
-  ) {
+  void _showItemPickerBottomSheet(BuildContext context, AddOrderScreenController ctrl) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -274,8 +286,7 @@ class _ItemSelectorField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasItems =
-        controller.selectedClothes.isNotEmpty || controller.selectedPairs.isNotEmpty;
+    final hasItems = controller.selectedClothes.isNotEmpty || controller.selectedPairs.isNotEmpty;
 
     return GestureDetector(
       onTap: onTap,
@@ -285,9 +296,7 @@ class _ItemSelectorField extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: hasItems
-              ? AppColors.primaryColor.withValues(alpha: 0.03)
-              : Colors.grey.shade50,
+          color: hasItems ? AppColors.primaryColor.withValues(alpha: 0.03) : Colors.grey.shade50,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: hasItems ? AppColors.primaryColor.withValues(alpha: 0.4) : Colors.grey.shade300,
@@ -305,18 +314,18 @@ class _ItemSelectorField extends StatelessWidget {
                       spacing: 6,
                       runSpacing: 6,
                       children: controller.selectedPairs
-                          .map((p) => _SelectedChip(
-                                label: p.name,
-                                color: Colors.amber.shade100,
-                                textColor: Colors.amber.shade800,
-                                icon: Icons.join_inner_rounded,
-                                onRemove: () =>
-                                    controller.togglePairSelection(p, false),
-                              ))
+                          .map(
+                            (p) => _SelectedChip(
+                              label: p.name,
+                              color: Colors.amber.shade100,
+                              textColor: Colors.amber.shade800,
+                              icon: Icons.join_inner_rounded,
+                              onRemove: () => controller.togglePairSelection(p, false),
+                            ),
+                          )
                           .toList(),
                     ),
-                    if (controller.selectedClothes.isNotEmpty)
-                      const SizedBox(height: 10),
+                    if (controller.selectedClothes.isNotEmpty) const SizedBox(height: 10),
                   ],
                   // Clothes chips
                   if (controller.selectedClothes.isNotEmpty) ...[
@@ -326,14 +335,15 @@ class _ItemSelectorField extends StatelessWidget {
                       spacing: 6,
                       runSpacing: 6,
                       children: controller.selectedClothes
-                          .map((c) => _SelectedChip(
-                                label: c.name,
-                                color: AppColors.primaryColor.withValues(alpha: 0.1),
-                                textColor: AppColors.primaryColor,
-                                icon: Icons.dry_cleaning_outlined,
-                                onRemove: () =>
-                                    controller.toggleClothSelection(c, false),
-                              ))
+                          .map(
+                            (c) => _SelectedChip(
+                              label: c.name,
+                              color: AppColors.primaryColor.withValues(alpha: 0.1),
+                              textColor: AppColors.primaryColor,
+                              icon: Icons.dry_cleaning_outlined,
+                              onRemove: () => controller.toggleClothSelection(c, false),
+                            ),
+                          )
                           .toList(),
                     ),
                   ],
@@ -382,7 +392,11 @@ class _SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(width: 3, height: 12, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))),
+        Container(
+          width: 3,
+          height: 12,
+          decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2)),
+        ),
         const SizedBox(width: 6),
         Text(label, style: AppTextStyle.semiBoldBlack(fontSize: 11, color: color)),
       ],
@@ -439,8 +453,7 @@ class _ItemPickerSheet extends StatefulWidget {
   State<_ItemPickerSheet> createState() => _ItemPickerSheetState();
 }
 
-class _ItemPickerSheetState extends State<_ItemPickerSheet>
-    with SingleTickerProviderStateMixin {
+class _ItemPickerSheetState extends State<_ItemPickerSheet> with SingleTickerProviderStateMixin {
   late AnimationController _animCtrl;
   late Animation<double> _fadeAnim;
   late Animation<Offset> _slideAnim;
@@ -448,13 +461,12 @@ class _ItemPickerSheetState extends State<_ItemPickerSheet>
   @override
   void initState() {
     super.initState();
-    _animCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 380),
-    );
+    _animCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 380));
     _fadeAnim = CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut);
-    _slideAnim = Tween<Offset>(begin: const Offset(0, 0.12), end: Offset.zero)
-        .animate(CurvedAnimation(parent: _animCtrl, curve: Curves.easeOutCubic));
+    _slideAnim = Tween<Offset>(
+      begin: const Offset(0, 0.12),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _animCtrl, curve: Curves.easeOutCubic));
     _animCtrl.forward();
   }
 
@@ -505,7 +517,7 @@ class _ItemPickerSheetState extends State<_ItemPickerSheet>
                           const SizedBox(height: 2),
                           StateBuilder<AddOrderScreenController>(
                             controller: ctrl,
-                            builder: (_, c, __) {
+                            builder: (_, c, _) {
                               final total = c.selectedPairs.length + c.selectedClothes.length;
                               return Text(
                                 total == 0
@@ -541,18 +553,12 @@ class _ItemPickerSheetState extends State<_ItemPickerSheet>
 
               // Scrollable list — Pairs first, then Clothes
               ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.58,
-                ),
+                constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.58),
                 child: StateBuilder<AddOrderScreenController>(
                   controller: ctrl,
-                  builder: (_, c, __) {
+                  builder: (_, c, _) {
                     return ListView(
-                      padding: EdgeInsets.only(
-                        left: 16,
-                        right: 16,
-                        bottom: bottomPad + 24,
-                      ),
+                      padding: EdgeInsets.only(left: 16, right: 16, bottom: bottomPad + 24),
                       shrinkWrap: true,
                       children: [
                         // ── PAIRS section ──────────────────────────────────
@@ -566,8 +572,7 @@ class _ItemPickerSheetState extends State<_ItemPickerSheet>
                           ),
                           const SizedBox(height: 8),
                           ...c.pairs.map((pair) {
-                            final isSelected =
-                                c.selectedPairs.any((p) => p.name == pair.name);
+                            final isSelected = c.selectedPairs.any((p) => p.name == pair.name);
                             return _ItemTile(
                               label: pair.name,
                               subtitle: "${pair.clothes.length} clothes",
@@ -592,8 +597,7 @@ class _ItemPickerSheetState extends State<_ItemPickerSheet>
                           ),
                           const SizedBox(height: 8),
                           ...c.clothes.map((cloth) {
-                            final isSelected =
-                                c.selectedClothes.any((cl) => cl.name == cloth.name);
+                            final isSelected = c.selectedClothes.any((cl) => cl.name == cloth.name);
                             return _ItemTile(
                               label: cloth.name,
                               subtitle: null,
@@ -653,10 +657,7 @@ class _SheetSectionHeader extends StatelessWidget {
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
+            decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(10)),
             child: Text(
               "$count selected",
               style: AppTextStyle.semiBoldBlack(fontSize: 11, color: color),
@@ -717,11 +718,7 @@ class _ItemTile extends StatelessWidget {
                 color: isSelected ? selectedColor.withValues(alpha: 0.15) : Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
-                icon,
-                size: 16,
-                color: isSelected ? selectedColor : Colors.grey.shade500,
-              ),
+              child: Icon(icon, size: 16, color: isSelected ? selectedColor : Colors.grey.shade500),
             ),
             const SizedBox(width: 12),
             // Label
@@ -737,10 +734,7 @@ class _ItemTile extends StatelessWidget {
                     ),
                   ),
                   if (subtitle != null)
-                    Text(
-                      subtitle!,
-                      style: AppTextStyle.captionBlack(fontSize: 11),
-                    ),
+                    Text(subtitle!, style: AppTextStyle.captionBlack(fontSize: 11)),
                 ],
               ),
             ),
@@ -788,9 +782,7 @@ class _MeasurementCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: hasMeasurement
-            ? AppColors.primaryColor.withValues(alpha: 0.05)
-            : Colors.red.shade50,
+        color: hasMeasurement ? AppColors.primaryColor.withValues(alpha: 0.05) : Colors.red.shade50,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: hasMeasurement
@@ -804,18 +796,14 @@ class _MeasurementCard extends StatelessWidget {
           Row(
             children: [
               Icon(
-                hasMeasurement
-                    ? Icons.check_circle_outline_rounded
-                    : Icons.warning_amber_rounded,
+                hasMeasurement ? Icons.check_circle_outline_rounded : Icons.warning_amber_rounded,
                 color: hasMeasurement ? AppColors.primaryColor : Colors.red.shade600,
                 size: 18,
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  hasMeasurement
-                      ? "Measurement Configured"
-                      : "Measurement required",
+                  hasMeasurement ? "Measurement Configured" : "Measurement required",
                   style: AppTextStyle.semiBoldBlack(
                     fontSize: 13,
                     color: hasMeasurement ? AppColors.primaryColor : Colors.red.shade700,
@@ -836,8 +824,7 @@ class _MeasurementCard extends StatelessWidget {
             children: [
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () =>
-                      controller.navigateToSelectMeasurementHistory(context),
+                  onPressed: () => controller.navigateToSelectMeasurementHistory(context),
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
                       color: hasMeasurement ? AppColors.primaryColor : Colors.red.shade300,
@@ -858,17 +845,19 @@ class _MeasurementCard extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () =>
-                      controller.navigateToAddNewMeasurement(context),
+                  onPressed: () => controller.navigateToAddNewMeasurement(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        hasMeasurement ? AppColors.primaryColor : Colors.red.shade600,
+                    backgroundColor: hasMeasurement ? AppColors.primaryColor : Colors.red.shade600,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
                   child: const Text(
                     "Add New",
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -901,8 +890,10 @@ class _CustomerDropdown extends StatelessWidget {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<CustomerModel>(
           value: controller.selectedCustomer,
-          hint: Text("Choose a customer",
-              style: AppTextStyle.regularBlack(fontSize: 13, color: Colors.grey.shade400)),
+          hint: Text(
+            "Choose a customer",
+            style: AppTextStyle.regularBlack(fontSize: 13, color: Colors.grey.shade400),
+          ),
           isExpanded: true,
           icon: Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey.shade500),
           items: controller.customers.map((customer) {

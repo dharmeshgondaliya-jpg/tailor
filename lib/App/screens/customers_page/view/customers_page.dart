@@ -4,6 +4,7 @@ import 'package:tailor/App/core/utils/app_text_style.dart';
 import 'package:tailor/App/core/constants/color_constants.dart';
 import '../../../widgets/empty_view.dart';
 import '../../../widgets/search_field.dart';
+import '../../../widgets/animated_list_item.dart';
 import '../binding/customers_page_binding.dart';
 import '../controller/customers_page_controller.dart';
 import '../model/customer_model.dart';
@@ -71,9 +72,12 @@ class CustomersPage extends StatekitView<CustomersPageController> implements Cus
       padding: const EdgeInsets.only(bottom: 80), // padding for FAB
       itemBuilder: (context, index) {
         final customer = controller.filteredCustomers[index];
-        return CustomerCard(
-          customer: customer,
-          onDelete: () => _showDeleteConfirmation(context, customer),
+        return AnimatedListItem(
+          index: index,
+          child: CustomerCard(
+            customer: customer,
+            onDelete: () => _showDeleteConfirmation(context, customer),
+          ),
         );
       },
     );

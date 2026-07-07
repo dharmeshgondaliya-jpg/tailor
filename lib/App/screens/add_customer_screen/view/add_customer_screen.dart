@@ -140,7 +140,7 @@ class AddCustomerScreen extends StatekitView<AddCustomerScreenController> implem
                   onPressed: () => controller.saveCustomer(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   child: Text(

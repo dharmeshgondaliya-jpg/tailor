@@ -6,6 +6,7 @@ import '../../base_screen/view/base_screen.dart';
 import '../../base_screen/view/custom_appbar.dart';
 import '../../../widgets/empty_view.dart';
 import '../../../widgets/search_field.dart';
+import '../../../widgets/animated_list_item.dart';
 import '../binding/clothes_listing_screen_binding.dart';
 import '../controller/clothes_listing_screen_controller.dart';
 import '../model/cloth_model.dart';
@@ -78,7 +79,10 @@ class ClothesListingScreen extends StatekitView<ClothesListingScreenController> 
       padding: const EdgeInsets.only(bottom: 80),
       itemBuilder: (context, index) {
         final cloth = controller.filteredClothes[index];
-        return ClothCard(cloth: cloth);
+        return AnimatedListItem(
+          index: index,
+          child: ClothCard(cloth: cloth),
+        );
       },
     );
   }

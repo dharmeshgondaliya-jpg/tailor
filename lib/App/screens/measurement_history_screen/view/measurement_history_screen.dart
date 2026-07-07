@@ -6,6 +6,7 @@ import 'package:tailor/App/core/utils/app_text_style.dart';
 import '../../base_screen/view/base_screen.dart';
 import '../../base_screen/view/custom_appbar.dart';
 import '../../../widgets/empty_view.dart';
+import '../../../widgets/animated_list_item.dart';
 import '../binding/measurement_history_screen_binding.dart';
 import '../controller/measurement_history_screen_controller.dart';
 import '../../add_order_screen/model/customer_measurement_model.dart';
@@ -90,10 +91,13 @@ class MeasurementHistoryScreen extends StatekitView<MeasurementHistoryScreenCont
       padding: const EdgeInsets.only(bottom: 24),
       itemBuilder: (context, index) {
         final measurement = controller.measurements[index];
-        return InkWell(
-          onTap: () => controller.selectMeasurement(context, measurement),
-          borderRadius: BorderRadius.circular(12),
-          child: HistoryCard(measurement: measurement),
+        return AnimatedListItem(
+          index: index,
+          child: InkWell(
+            onTap: () => controller.selectMeasurement(context, measurement),
+            borderRadius: BorderRadius.circular(12),
+            child: HistoryCard(measurement: measurement),
+          ),
         );
       },
     );

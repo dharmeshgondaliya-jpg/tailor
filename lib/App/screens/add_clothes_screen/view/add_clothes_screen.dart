@@ -107,15 +107,18 @@ class AddClothesScreen extends StatekitView<AddClothesScreenController>
                                   Expanded(
                                     flex: 2,
                                     child: Container(
-                                      height: 40,
-                                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                                      height: 48,
+                                      padding: const EdgeInsets.symmetric(horizontal: 12),
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        border: Border.all(color: Colors.black54, width: 0.8),
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(color: Colors.grey.shade300, width: 1.0),
+                                        color: Colors.white,
                                       ),
                                       child: DropdownButtonHideUnderline(
                                         child: DropdownButton<String>(
                                           value: field.type,
+                                          isExpanded: true,
+                                          icon: Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey.shade500),
                                           items: const [
                                             DropdownMenuItem(
                                               value: "inches",
@@ -160,7 +163,7 @@ class AddClothesScreen extends StatekitView<AddClothesScreenController>
                   onPressed: () => controller.saveCloth(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   child: Text(
