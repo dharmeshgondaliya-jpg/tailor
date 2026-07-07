@@ -1,0 +1,31 @@
+class OrderModel {
+  final String orderNumber;
+  final String customerName;
+  final String status;
+  final DateTime orderDate;
+  final DateTime completionDate;
+  final double laborCost;
+  final int quantity;
+  final String clothesName;
+  final String? notes;
+
+  OrderModel({
+    required this.orderNumber,
+    required this.customerName,
+    required this.status,
+    required this.orderDate,
+    required this.completionDate,
+    required this.laborCost,
+    required this.quantity,
+    required this.clothesName,
+    this.notes,
+  });
+
+  bool get isOverdue {
+    if (status.toLowerCase() == 'completed') return false;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final compDateOnly = DateTime(completionDate.year, completionDate.month, completionDate.day);
+    return compDateOnly.isBefore(today);
+  }
+}
