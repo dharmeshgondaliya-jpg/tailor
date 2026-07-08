@@ -7,6 +7,7 @@ import '../../base_screen/view/custom_appbar.dart';
 import '../../../widgets/app_textfield.dart';
 import '../binding/add_clothes_screen_binding.dart';
 import '../controller/add_clothes_screen_controller.dart';
+import '../../clothes_listing_screen/model/cloth_model.dart';
 
 class AddClothesScreen extends StatekitView<AddClothesScreenController>
     implements AddClothesScreenBinding {
@@ -15,23 +16,39 @@ class AddClothesScreen extends StatekitView<AddClothesScreenController>
   @override
   void initState() {
     controller.binding = this;
-    controller.initData();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = ModalRoute.of(context)!.settings.arguments;
+      if (args is ClothModel) {
+        controller.initData(cloth: args);
+      } else {
+        controller.initData();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreen(
-      appBar: const CustomAppbar(
-        title: Text(
-          "Add Cloth",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: StateBuilder<AddClothesScreenController>(
-        controller: controller,
-        builder: (context, controller, child) {
-          return Column(
+    return StateBuilder<AddClothesScreenController>(
+      controller: controller,
+      builder: (context, controller, child) {
+        final isEditing = controller.editingCloth != null;
+        return BaseScreen(
+          appBar: CustomAppbar(
+            title: Text(
+              isEditing ? "Edit Cloth" : "Add Cloth",
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            actions: isEditing
+                ? [
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline, color: Colors.white),
+                      onPressed: () => _showDeleteConfirmation(context),
+                    ),
+                  ]
+                : null,
+          ),
+          body: Column(
             children: [
               Expanded(
                 child: SingleChildScrollView(
@@ -170,15 +187,54 @@ class AddClothesScreen extends StatekitView<AddClothesScreenController>
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   child: Text(
-                    "Save Cloth",
+                    isEditing ? "Update Cloth" : "Save Cloth",
                     style: AppTextStyle.mediumBlack(fontSize: 14).copyWith(color: Colors.white),
                   ),
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Delete Cloth", style: AppTextStyle.boldBlack(fontSize: 18)),
+          content: Text(
+            "Are you sure you want to delete ${controller.editingCloth?.name}? This action cannot be undone.",
+            style: AppTextStyle.regularBlack(fontSize: 14).copyWith(color: Colors.grey.shade700),
+          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                "Cancel",
+                style: AppTextStyle.mediumBlack(fontSize: 14).copyWith(color: Colors.grey),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context); // Pop dialog
+                controller.deleteCloth(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: Text(
+                "Delete",
+                style: AppTextStyle.mediumBlack(fontSize: 14).copyWith(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

@@ -24,35 +24,38 @@ class CustomersPage extends StatekitView<CustomersPageController> implements Cus
     return StateBuilder<CustomersPageController>(
       controller: controller,
       builder: (context, controller, child) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 12),
-            // Search field
-            Row(
-              children: [
-                Expanded(
-                  child: SearchField(
-                    searchController: controller.searchController,
-                    onTextChange: (text) => controller.updateSearch(text),
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 12),
+              // Search field
+              Row(
+                children: [
+                  Expanded(
+                    child: SearchField(
+                      searchController: controller.searchController,
+                      onTextChange: (text) => controller.updateSearch(text),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                IconButton(
-                  onPressed: () => controller.navigateToAddCustomer(context),
-                  style: IconButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    onPressed: () => controller.navigateToAddCustomer(context),
+                    style: IconButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                    icon: const Icon(Icons.add, color: Colors.white),
                   ),
-                  icon: const Icon(Icons.add, color: Colors.white),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
+                ],
+              ),
+              const SizedBox(height: 16),
 
-            // Customers List or Empty View
-            Expanded(child: _buildCustomersContent(controller)),
-          ],
+              // Customers List or Empty View
+              Expanded(child: _buildCustomersContent(controller)),
+            ],
+          ),
         );
       },
     );
@@ -76,6 +79,7 @@ class CustomersPage extends StatekitView<CustomersPageController> implements Cus
           index: index,
           child: CustomerCard(
             customer: customer,
+            onEdit: () => controller.navigateToCustomerDetails(context, customer),
             onDelete: () => _showDeleteConfirmation(context, customer),
           ),
         );
@@ -134,9 +138,15 @@ class CustomersPage extends StatekitView<CustomersPageController> implements Cus
 
 class CustomerCard extends StatelessWidget {
   final CustomerModel customer;
+  final VoidCallback onEdit;
   final VoidCallback onDelete;
 
-  const CustomerCard({super.key, required this.customer, required this.onDelete});
+  const CustomerCard({
+    super.key,
+    required this.customer,
+    required this.onEdit,
+    required this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -153,138 +163,141 @@ class CustomerCard extends StatelessWidget {
     ];
     final color = colors[customer.name.hashCode % colors.length];
 
-    return Card(
-      elevation: 0,
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: Colors.grey.shade200),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 24,
-                  backgroundColor: color.withValues(alpha: 0.1),
-                  child: Text(
-                    initial,
-                    style: AppTextStyle.boldBlack(fontSize: 20).copyWith(color: color),
+    return GestureDetector(
+      onTap: onEdit,
+      child: Card(
+        elevation: 0,
+        margin: const EdgeInsets.only(bottom: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: Colors.grey.shade200),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: color.withValues(alpha: 0.1),
+                    child: Text(
+                      initial,
+                      style: AppTextStyle.boldBlack(fontSize: 20).copyWith(color: color),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              customer.name,
-                              style: AppTextStyle.boldBlack(fontSize: 16),
-                              overflow: TextOverflow.ellipsis,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                customer.name,
+                                style: AppTextStyle.boldBlack(fontSize: 16),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                          if (customer.isRegular) ...[
-                            const SizedBox(width: 6),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: Colors.amber.shade100,
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(color: Colors.amber.shade300),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(Icons.star, size: 10, color: Colors.amber.shade800),
-                                  const SizedBox(width: 2),
-                                  Text(
-                                    "Regular",
-                                    style: TextStyle(
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.amber.shade800,
+                            if (customer.isRegular) ...[
+                              const SizedBox(width: 6),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.amber.shade100,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(color: Colors.amber.shade300),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.star, size: 10, color: Colors.amber.shade800),
+                                    const SizedBox(width: 2),
+                                    Text(
+                                      "Regular",
+                                      style: TextStyle(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.amber.shade800,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
+                            ],
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(Icons.phone_outlined, size: 14, color: Colors.grey.shade500),
+                            const SizedBox(width: 4),
+                            Text(
+                              customer.phone,
+                              style: AppTextStyle.regularBlack(
+                                fontSize: 13,
+                              ).copyWith(color: Colors.grey.shade700),
                             ),
                           ],
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Icon(Icons.phone_outlined, size: 14, color: Colors.grey.shade500),
-                          const SizedBox(width: 4),
-                          Text(
-                            customer.phone,
-                            style: AppTextStyle.regularBlack(
-                              fontSize: 13,
-                            ).copyWith(color: Colors.grey.shade700),
-                          ),
-                        ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: onDelete,
+                    icon: const Icon(Icons.delete_outline, color: Colors.red),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              const Divider(),
+              const SizedBox(height: 12),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.location_on_outlined, size: 14, color: Colors.grey.shade500),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      customer.address,
+                      style: AppTextStyle.regularBlack(
+                        fontSize: 13,
+                      ).copyWith(color: Colors.grey.shade700),
+                    ),
+                  ),
+                ],
+              ),
+              if (customer.notes != null && customer.notes!.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.notes, size: 14, color: Colors.grey.shade600),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          customer.notes!,
+                          style: AppTextStyle.regularBlack(
+                            fontSize: 12,
+                          ).copyWith(color: Colors.grey.shade700, fontStyle: FontStyle.italic),
+                        ),
                       ),
                     ],
                   ),
                 ),
-                IconButton(
-                  onPressed: onDelete,
-                  icon: const Icon(Icons.delete_outline, color: Colors.red),
-                ),
               ],
-            ),
-            const SizedBox(height: 12),
-            const Divider(),
-            const SizedBox(height: 12),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(Icons.location_on_outlined, size: 14, color: Colors.grey.shade500),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: Text(
-                    customer.address,
-                    style: AppTextStyle.regularBlack(
-                      fontSize: 13,
-                    ).copyWith(color: Colors.grey.shade700),
-                  ),
-                ),
-              ],
-            ),
-            if (customer.notes != null && customer.notes!.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(Icons.notes, size: 14, color: Colors.grey.shade600),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        customer.notes!,
-                        style: AppTextStyle.regularBlack(
-                          fontSize: 12,
-                        ).copyWith(color: Colors.grey.shade700, fontStyle: FontStyle.italic),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ],
-          ],
+          ),
         ),
       ),
     );

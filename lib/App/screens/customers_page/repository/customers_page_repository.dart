@@ -43,8 +43,20 @@ class CustomersPageRepository {
     return _customers;
   }
 
-  void addCustomer(CustomerModel customer) {
-    _customers.add(customer);
+  void addCustomer(CustomerModel customer, {String? originalName}) {
+    if (originalName != null) {
+      final index = _customers.indexWhere((c) => c.name == originalName);
+      if (index >= 0) {
+        _customers[index] = customer;
+        return;
+      }
+    }
+    final index = _customers.indexWhere((c) => c.name == customer.name);
+    if (index >= 0) {
+      _customers[index] = customer;
+    } else {
+      _customers.add(customer);
+    }
   }
 
   void deleteCustomer(CustomerModel customer) {

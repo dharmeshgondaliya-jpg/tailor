@@ -37,27 +37,87 @@ class AddOrderScreenController extends StateController<AddOrderScreenBinding> {
   List<ClothModel> clothes = [];
   List<PairModel> pairs = [];
 
-  List<ClothModel> selectedClothes = [];
-  List<PairModel> selectedPairs = [];
+  final List<ClothModel> selectedClothes = [];
+  final List<PairModel> selectedPairs = [];
 
-  void initData() {
+  OrderModel? editingOrder;
+
+  void initData({OrderModel? order}) {
     customers = _customersRepo.getCustomers();
     clothes = _clothesRepo.getClothes();
     pairs = _pairsRepo.getPairs();
 
-    orderDate = DateTime.now();
-    completionDate = DateTime.now().add(const Duration(days: 7));
-    selectedCustomer = null;
     selectedClothes.clear();
     selectedPairs.clear();
-    status = "Pending";
-    quantityController.text = "1";
-    isUrgent = false;
-    laborCostController.clear();
-    advanceAmountController.clear();
-    notesController.clear();
-    selectedMeasurement = null;
-    
+
+    if (order != null) {
+      editingOrder = order;
+      orderDate = order.orderDate;
+      completionDate = order.completionDate;
+
+      // Match customer
+      selectedCustomer = customers.firstWhere(
+        (c) => c.name == order.customerName,
+        orElse: () => CustomerModel(name: order.customerName, phone: "", address: ""),
+      );
+
+      // Match clothes and pairs
+      final parts = order.clothesName.split(', ').map((s) => s.trim()).toList();
+      for (final part in parts) {
+        final matchedCloth = clothes.firstWhere(
+          (c) => c.name == part,
+          orElse: () => ClothModel(id: "", name: "", measurementFields: []),
+        );
+        if (matchedCloth.name.isNotEmpty) {
+          selectedClothes.add(matchedCloth);
+        }
+
+        final matchedPair = pairs.firstWhere(
+          (p) => p.name == part,
+          orElse: () => PairModel(id: "", name: "", clothes: []),
+        );
+        if (matchedPair.name.isNotEmpty) {
+          selectedPairs.add(matchedPair);
+        }
+      }
+
+      status = order.status;
+      paymentStatus = order.paymentStatus;
+      quantityController.text = order.quantity.toString();
+      isUrgent = order.isUrgent;
+      laborCostController.text = order.laborCost.toStringAsFixed(0);
+      advanceAmountController.text = order.advanceAmount.toStringAsFixed(0);
+      notesController.text = order.notes ?? "";
+
+      selectedMeasurement = CustomerMeasurementModel(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        customerName: order.customerName,
+        clothOrPairName: order.clothesName,
+        dateAdded: DateTime.now(),
+        clothesMeasurements: [],
+      );
+    } else {
+      editingOrder = null;
+      orderDate = DateTime.now();
+      completionDate = DateTime.now().add(const Duration(days: 7));
+      selectedCustomer = null;
+      status = "Pending";
+      paymentStatus = "Unpaid";
+      quantityController.text = "1";
+      isUrgent = false;
+      laborCostController.clear();
+      advanceAmountController.clear();
+      notesController.clear();
+      selectedMeasurement = null;
+    }
+
+    update();
+  }
+
+  String paymentStatus = "Unpaid";
+
+  void updatePaymentStatus(String val) {
+    paymentStatus = val;
     update();
   }
 
@@ -246,8 +306,10 @@ class AddOrderScreenController extends StateController<AddOrderScreenBinding> {
     final advanceText = advanceAmountController.text.trim();
     final advanceVal = double.tryParse(advanceText) ?? 0.0;
 
+    final isEditing = editingOrder != null;
+
     final order = OrderModel(
-      orderNumber: "#ORD-${DateTime.now().millisecondsSinceEpoch % 100000}",
+      orderNumber: editingOrder?.orderNumber ?? "#ORD-${DateTime.now().millisecondsSinceEpoch % 100000}",
       customerName: customer.name,
       status: status,
       orderDate: orderDate,
@@ -257,16 +319,29 @@ class AddOrderScreenController extends StateController<AddOrderScreenBinding> {
       isUrgent: isUrgent,
       quantity: int.parse(qtyText),
       clothesName: getSelectedItemsNames(),
+      paymentStatus: paymentStatus,
       notes: notesController.text.trim().isEmpty ? null : notesController.text.trim(),
     );
 
     _repository.saveOrder(order);
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Order for ${customer.name} created successfully")),
+      SnackBar(content: Text("Order ${order.orderNumber} for ${customer.name} ${isEditing ? 'updated' : 'created'} successfully")),
     );
 
     Navigator.pop(context);
+  }
+
+  void deleteOrder(BuildContext context) {
+    HapticFeedback.mediumImpact();
+    final order = editingOrder;
+    if (order != null) {
+      _repository.deleteOrder(order);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Order ${order.orderNumber} deleted successfully")),
+      );
+      Navigator.pop(context);
+    }
   }
 
   @override

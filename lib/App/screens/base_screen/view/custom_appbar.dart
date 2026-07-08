@@ -5,9 +5,11 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppbar({
     super.key,
     this.title,
+    this.actions,
   });
 
   final Widget? title;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
         fontSize: 18,
       ),
       title: title,
+      actions: actions,
     );
   }
 

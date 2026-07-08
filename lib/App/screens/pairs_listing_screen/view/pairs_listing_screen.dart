@@ -81,7 +81,10 @@ class PairsListingScreen extends StatekitView<PairsListingScreenController> impl
         final pair = controller.filteredPairs[index];
         return AnimatedListItem(
           index: index,
-          child: PairCard(pair: pair),
+          child: PairCard(
+            pair: pair,
+            onTap: () => controller.navigateToEditPairs(context, pair),
+          ),
         );
       },
     );
@@ -93,34 +96,37 @@ class PairsListingScreen extends StatekitView<PairsListingScreenController> impl
 
 class PairCard extends StatelessWidget {
   final PairModel pair;
-  const PairCard({super.key, required this.pair});
+  final VoidCallback onTap;
+  const PairCard({super.key, required this.pair, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: Colors.grey.shade200),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.style, color: AppColors.primaryColor, size: 20),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    pair.name,
-                    style: AppTextStyle.boldBlack(fontSize: 16),
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        elevation: 0,
+        margin: const EdgeInsets.only(bottom: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: Colors.grey.shade200),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.style, color: AppColors.primaryColor, size: 20),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      pair.name,
+                      style: AppTextStyle.boldBlack(fontSize: 16),
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
             const SizedBox(height: 12),
             const Divider(),
             const SizedBox(height: 12),
@@ -159,6 +165,7 @@ class PairCard extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

@@ -39,6 +39,11 @@ class ClothesListingScreenController extends StateController<ClothesListingScree
     fetchInitData();
   }
 
+  Future<void> navigateToEditClothes(BuildContext context, ClothModel cloth) async {
+    await Navigator.pushNamed(context, Routes.addClothesScreen, arguments: cloth);
+    fetchInitData();
+  }
+
   @override
   void dispose() {
     searchController.dispose();

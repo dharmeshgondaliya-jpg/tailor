@@ -9,6 +9,7 @@ import '../../../widgets/app_textfield.dart';
 import '../binding/add_order_screen_binding.dart';
 import '../controller/add_order_screen_controller.dart';
 import '../../customers_page/model/customer_model.dart';
+import '../../orders_page/model/order_model.dart';
 
 class AddOrderScreen extends StatekitView<AddOrderScreenController>
     implements AddOrderScreenBinding {
@@ -17,23 +18,39 @@ class AddOrderScreen extends StatekitView<AddOrderScreenController>
   @override
   void initState() {
     controller.binding = this;
-    controller.initData();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = ModalRoute.of(context)!.settings.arguments;
+      if (args is OrderModel) {
+        controller.initData(order: args);
+      } else {
+        controller.initData();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreen(
-      appBar: const CustomAppbar(
-        title: Text(
-          "Add Order",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: StateBuilder<AddOrderScreenController>(
-        controller: controller,
-        builder: (context, controller, child) {
-          return Column(
+    return StateBuilder<AddOrderScreenController>(
+      controller: controller,
+      builder: (context, controller, child) {
+        final isEditing = controller.editingOrder != null;
+        return BaseScreen(
+          appBar: CustomAppbar(
+            title: Text(
+              isEditing ? "Edit Order" : "Add Order",
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            actions: isEditing
+                ? [
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline, color: Colors.white),
+                      onPressed: () => _showDeleteConfirmation(context),
+                    ),
+                  ]
+                : null,
+          ),
+          body: Column(
             children: [
               Expanded(
                 child: SingleChildScrollView(
@@ -179,6 +196,10 @@ class AddOrderScreen extends StatekitView<AddOrderScreenController>
                       ),
                       const SizedBox(height: 20),
 
+                      // ── 6.5 Payment Status ────────────────────────────────
+                      _PaymentStatusDropdown(controller: controller),
+                      const SizedBox(height: 20),
+
                       // ── 7. Urgent Switch ──────────────────────────────────
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -248,15 +269,15 @@ class AddOrderScreen extends StatekitView<AddOrderScreenController>
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   child: Text(
-                    "Save Order",
+                    isEditing ? "Update Order" : "Save Order",
                     style: AppTextStyle.semiBoldBlack(fontSize: 15, color: Colors.white),
                   ),
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -270,6 +291,45 @@ class AddOrderScreen extends StatekitView<AddOrderScreenController>
       backgroundColor: Colors.transparent,
       builder: (ctx) {
         return _ItemPickerSheet(controller: ctrl);
+      },
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Delete Order", style: AppTextStyle.boldBlack(fontSize: 18)),
+          content: Text(
+            "Are you sure you want to delete order ${controller.editingOrder?.orderNumber}? This action cannot be undone.",
+            style: AppTextStyle.regularBlack(fontSize: 14).copyWith(color: Colors.grey.shade700),
+          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                "Cancel",
+                style: AppTextStyle.mediumBlack(fontSize: 14).copyWith(color: Colors.grey),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context); // Pop dialog
+                controller.deleteOrder(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: Text(
+                "Delete",
+                style: AppTextStyle.mediumBlack(fontSize: 14).copyWith(color: Colors.white),
+              ),
+            ),
+          ],
+        );
       },
     );
   }
@@ -900,12 +960,25 @@ class _CustomerDropdown extends StatelessWidget {
           ),
           isExpanded: true,
           icon: Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey.shade500),
-          items: controller.customers.map((customer) {
-            return DropdownMenuItem(
-              value: customer,
-              child: Text(customer.name, style: AppTextStyle.regularBlack(fontSize: 14)),
-            );
-          }).toList(),
+          items: () {
+            final dropdownItems = controller.customers.map((customer) {
+              return DropdownMenuItem<CustomerModel>(
+                value: customer,
+                child: Text(customer.name, style: AppTextStyle.regularBlack(fontSize: 14)),
+              );
+            }).toList();
+
+            if (controller.selectedCustomer != null) {
+              final hasSelected = controller.customers.any((c) => c.name == controller.selectedCustomer!.name);
+              if (!hasSelected) {
+                dropdownItems.add(DropdownMenuItem<CustomerModel>(
+                  value: controller.selectedCustomer!,
+                  child: Text(controller.selectedCustomer!.name, style: AppTextStyle.regularBlack(fontSize: 14)),
+                ));
+              }
+            }
+            return dropdownItems;
+          }(),
           onChanged: controller.selectCustomer,
         ),
       ),
@@ -946,6 +1019,47 @@ class _StatusDropdown extends StatelessWidget {
               ],
               onChanged: (val) {
                 if (val != null) controller.updateStatus(val);
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _PaymentStatusDropdown extends StatelessWidget {
+  final AddOrderScreenController controller;
+  const _PaymentStatusDropdown({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Payment Status", style: AppTextStyle.semiBoldBlack(fontSize: 14)),
+        const SizedBox(height: 8),
+        Container(
+          height: 48,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.grey.shade300, width: 1),
+            color: Colors.white,
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: controller.paymentStatus,
+              isExpanded: true,
+              icon: Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey.shade500),
+              items: const [
+                DropdownMenuItem(value: "Unpaid", child: Text("Unpaid")),
+                DropdownMenuItem(value: "Advance", child: Text("Advance")),
+                DropdownMenuItem(value: "Partial Paid", child: Text("Partial Paid")),
+                DropdownMenuItem(value: "Paid", child: Text("Paid")),
+              ],
+              onChanged: (val) {
+                if (val != null) controller.updatePaymentStatus(val);
               },
             ),
           ),

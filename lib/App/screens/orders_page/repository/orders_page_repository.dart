@@ -4,80 +4,86 @@ class OrdersPageRepository {
   static final List<OrderModel> _orders = [
     OrderModel(
       orderNumber: "#ORD-101",
-      customerName: "John Doe",
+      customerName: "Sarah Connor",
       status: "Pending",
       orderDate: DateTime.now().subtract(const Duration(days: 3)),
       completionDate: DateTime.now().add(const Duration(days: 2)),
-      laborCost: 45.0,
-      advanceAmount: 10.0,
+      laborCost: 450.0,
+      advanceAmount: 150.0,
       isUrgent: true,
       quantity: 2,
       clothesName: "Shirt & Pant",
+      paymentStatus: "Advance",
       notes: "Short sleeves on the shirt.",
     ),
     OrderModel(
       orderNumber: "#ORD-102",
-      customerName: "Alice Smith",
+      customerName: "Peter Parker",
       status: "Processing",
       orderDate: DateTime.now().subtract(const Duration(days: 5)),
       completionDate: DateTime.now().subtract(const Duration(days: 1)), // Overdue
-      laborCost: 120.0,
-      advanceAmount: 50.0,
+      laborCost: 1200.0,
+      advanceAmount: 0.0,
       isUrgent: false,
       quantity: 1,
       clothesName: "Wedding Suit",
+      paymentStatus: "Unpaid",
       notes: "Add extra pockets inside the jacket.",
     ),
     OrderModel(
       orderNumber: "#ORD-103",
-      customerName: "Bob Johnson",
+      customerName: "Bruce Wayne",
       status: "Completed",
       orderDate: DateTime.now().subtract(const Duration(days: 10)),
       completionDate: DateTime.now().subtract(const Duration(days: 3)),
-      laborCost: 80.0,
-      advanceAmount: 80.0,
+      laborCost: 800.0,
+      advanceAmount: 800.0,
       isUrgent: false,
       quantity: 3,
       clothesName: "Kurtas",
+      paymentStatus: "Paid",
       notes: null,
     ),
     OrderModel(
       orderNumber: "#ORD-104",
-      customerName: "Emma Watson",
+      customerName: "Clark Kent",
       status: "Pending",
       orderDate: DateTime.now().subtract(const Duration(days: 1)),
       completionDate: DateTime.now().add(const Duration(days: 5)),
-      laborCost: 60.0,
-      advanceAmount: 20.0,
+      laborCost: 600.0,
+      advanceAmount: 200.0,
       isUrgent: false,
       quantity: 2,
       clothesName: "Salwar Kameez",
+      paymentStatus: "Partial Paid",
       notes: "Needs lace borders on the dupatta.",
     ),
     OrderModel(
       orderNumber: "#ORD-105",
-      customerName: "Michael Brown",
+      customerName: "Diana Prince",
       status: "Cancelled",
       orderDate: DateTime.now().subtract(const Duration(days: 7)),
       completionDate: DateTime.now().subtract(const Duration(days: 4)),
-      laborCost: 50.0,
+      laborCost: 500.0,
       advanceAmount: 0.0,
       isUrgent: false,
       quantity: 1,
       clothesName: "Jeans Alteration",
+      paymentStatus: "Unpaid",
       notes: "Shorten length by 2 inches.",
     ),
     OrderModel(
       orderNumber: "#ORD-106",
-      customerName: "Sarah Jenkins",
+      customerName: "Sarah Connor",
       status: "Processing",
       orderDate: DateTime.now().subtract(const Duration(days: 2)),
       completionDate: DateTime.now(),
-      laborCost: 150.0,
-      advanceAmount: 50.0,
+      laborCost: 1500.0,
+      advanceAmount: 500.0,
       isUrgent: true,
       quantity: 4,
       clothesName: "Shirts",
+      paymentStatus: "Advance",
       notes: "Different colors, regular fit.",
     ),
   ];
@@ -87,7 +93,12 @@ class OrdersPageRepository {
   }
 
   void addOrder(OrderModel order) {
-    _orders.add(order);
+    final index = _orders.indexWhere((o) => o.orderNumber == order.orderNumber);
+    if (index >= 0) {
+      _orders[index] = order;
+    } else {
+      _orders.add(order);
+    }
   }
 
   void deleteOrder(OrderModel order) {

@@ -40,6 +40,15 @@ class ClothesListingScreenRepository {
   }
 
   void addCloth(ClothModel cloth) {
-    _clothes.add(cloth);
+    final index = _clothes.indexWhere((c) => c.id == cloth.id);
+    if (index >= 0) {
+      _clothes[index] = cloth;
+    } else {
+      _clothes.add(cloth);
+    }
+  }
+
+  void deleteCloth(ClothModel cloth) {
+    _clothes.removeWhere((c) => c.id == cloth.id);
   }
 }

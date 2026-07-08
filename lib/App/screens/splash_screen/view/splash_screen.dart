@@ -75,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen> {
               tween: Tween<double>(begin: 0.0, end: 1.0),
               builder: (context, value, child) {
                 return Opacity(
-                  opacity: value,
+                  opacity: value.clamp(0.0, 1.0),
                   child: Transform.scale(
                     scale: 0.8 + (value * 0.2),
                     child: child,
@@ -131,7 +131,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 tween: Tween<double>(begin: 0.0, end: 1.0),
                 builder: (context, value, child) {
                   return Opacity(
-                    opacity: (value - 0.5).clamp(0.0, 1.0) * 2.0,
+                    opacity: ((value - 0.5) * 2.0).clamp(0.0, 1.0),
                     child: child,
                   );
                 },

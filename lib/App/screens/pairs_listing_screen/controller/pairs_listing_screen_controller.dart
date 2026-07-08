@@ -39,6 +39,11 @@ class PairsListingScreenController extends StateController<PairsListingScreenBin
     fetchInitData();
   }
 
+  Future<void> navigateToEditPairs(BuildContext context, PairModel pair) async {
+    await Navigator.pushNamed(context, Routes.addPairsScreen, arguments: pair);
+    fetchInitData();
+  }
+
   @override
   void dispose() {
     searchController.dispose();

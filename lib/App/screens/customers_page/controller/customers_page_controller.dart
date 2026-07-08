@@ -50,6 +50,16 @@ class CustomersPageController extends StateController<CustomersPageBinding> {
     fetchInitData();
   }
 
+  Future<void> navigateToEditCustomer(BuildContext context, CustomerModel customer) async {
+    await Navigator.pushNamed(context, Routes.addCustomerScreen, arguments: customer);
+    fetchInitData();
+  }
+
+  Future<void> navigateToCustomerDetails(BuildContext context, CustomerModel customer) async {
+    await Navigator.pushNamed(context, Routes.customerDetailsScreen, arguments: customer);
+    fetchInitData();
+  }
+
   @override
   void dispose() {
     searchController.dispose();

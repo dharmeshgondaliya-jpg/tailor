@@ -39,9 +39,9 @@ class ProfilePage extends StatekitView<ProfilePageController> implements Profile
                   backgroundColor: AppColors.primaryColor.withValues(alpha: 0.1),
                   child: Text(
                     initial,
-                    style: AppTextStyle.boldBlack(fontSize: 44).copyWith(
-                      color: AppColors.primaryColor,
-                    ),
+                    style: AppTextStyle.boldBlack(
+                      fontSize: 44,
+                    ).copyWith(color: AppColors.primaryColor),
                   ),
                 ),
               ),
@@ -94,7 +94,10 @@ class ProfilePage extends StatekitView<ProfilePageController> implements Profile
                       ),
                       ListTile(
                         leading: const Icon(Icons.email_outlined, color: AppColors.primaryColor),
-                        title: const Text("Email Address", style: TextStyle(fontSize: 13, color: Colors.grey)),
+                        title: const Text(
+                          "Email Address",
+                          style: TextStyle(fontSize: 13, color: Colors.grey),
+                        ),
                         subtitle: Text(
                           controller.userEmail,
                           style: AppTextStyle.mediumBlack(fontSize: 14),
@@ -103,7 +106,10 @@ class ProfilePage extends StatekitView<ProfilePageController> implements Profile
                       const Divider(height: 1),
                       ListTile(
                         leading: const Icon(Icons.phone_outlined, color: AppColors.primaryColor),
-                        title: const Text("Phone Number", style: TextStyle(fontSize: 13, color: Colors.grey)),
+                        title: const Text(
+                          "Phone Number",
+                          style: TextStyle(fontSize: 13, color: Colors.grey),
+                        ),
                         subtitle: Text(
                           controller.userPhone,
                           style: AppTextStyle.mediumBlack(fontSize: 14),
@@ -114,55 +120,6 @@ class ProfilePage extends StatekitView<ProfilePageController> implements Profile
                 ),
               ),
               const SizedBox(height: 16),
-
-              // 3. Settings List Options
-              Card(
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: BorderSide(color: Colors.grey.shade200),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
-                        child: Text(
-                          "APP & STORE CONFIGURATION",
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade500,
-                            letterSpacing: 1.0,
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        leading: const Icon(Icons.store_outlined, color: Colors.black87),
-                        title: Text("Store Settings", style: AppTextStyle.mediumBlack(fontSize: 14)),
-                        trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
-                        onTap: () {},
-                      ),
-                      const Divider(height: 1),
-                      ListTile(
-                        leading: const Icon(Icons.notifications_none_outlined, color: Colors.black87),
-                        title: Text("Notification Preferences", style: AppTextStyle.mediumBlack(fontSize: 14)),
-                        trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
-                        onTap: () {},
-                      ),
-                      const Divider(height: 1),
-                      ListTile(
-                        leading: const Icon(Icons.support_agent_outlined, color: Colors.black87),
-                        title: Text("Help & Support", style: AppTextStyle.mediumBlack(fontSize: 14)),
-                        trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
-                        onTap: () {},
-                      ),
-                    ],
-                  ),
-                ),
-              ),
             ],
           ),
         );

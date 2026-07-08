@@ -24,6 +24,10 @@ import '../screens/measurement_screen/view/measurement_screen.dart';
 import '../screens/measurement_screen/controller/measurement_screen_controller.dart';
 import '../screens/measurement_history_screen/view/measurement_history_screen.dart';
 import '../screens/measurement_history_screen/controller/measurement_history_screen_controller.dart';
+import '../screens/customer_details_screen/view/customer_details_screen.dart';
+import '../screens/customer_details_screen/controller/customer_details_screen_controller.dart';
+import '../screens/bill_preview_screen/view/bill_preview_screen.dart';
+import '../screens/bill_preview_screen/controller/bill_preview_screen_controller.dart';
 
 abstract class RouteNavigator {
   static final Map<String, Widget Function(BuildContext)> routes = {
@@ -81,6 +85,18 @@ abstract class RouteNavigator {
         create: () => MeasurementHistoryScreenController(),
       ),
       child: MeasurementHistoryScreen(),
+    ),
+    Routes.customerDetailsScreen: (BuildContext context) => StateProvider(
+      stateProvider: StatekitProvider(
+        create: () => CustomerDetailsScreenController(),
+      ),
+      child: CustomerDetailsScreen(),
+    ),
+    Routes.billPreviewScreen: (BuildContext context) => StateProvider(
+      stateProvider: StatekitProvider(
+        create: () => BillPreviewScreenController(),
+      ),
+      child: BillPreviewScreen(),
     ),
   };
 }

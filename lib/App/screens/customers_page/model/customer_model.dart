@@ -12,4 +12,12 @@ class CustomerModel {
     this.notes,
     this.isRegular = false,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CustomerModel && runtimeType == other.runtimeType && name == other.name;
+
+  @override
+  int get hashCode => name.hashCode;
 }

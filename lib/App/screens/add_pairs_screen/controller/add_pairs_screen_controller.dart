@@ -15,10 +15,24 @@ class AddPairsScreenController extends StateController<AddPairsScreenBinding> {
   List<ClothModel> availableClothes = [];
   List<ClothModel> selectedClothes = [];
 
-  void initData() {
+  PairModel? editingPair;
+
+  void initData({PairModel? pair}) {
     availableClothes = _clothesRepository.getClothes();
     selectedClothes = [];
     nameController.clear();
+
+    if (pair != null) {
+      editingPair = pair;
+      nameController.text = pair.name;
+      // Pre-select the clothes that belong to this pair based on their ID
+      for (final cloth in pair.clothes) {
+        final match = availableClothes.firstWhere((c) => c.id == cloth.id, orElse: () => cloth);
+        selectedClothes.add(match);
+      }
+    } else {
+      editingPair = null;
+    }
     update();
   }
 
@@ -50,8 +64,10 @@ class AddPairsScreenController extends StateController<AddPairsScreenBinding> {
       return;
     }
 
+    final isEditing = editingPair != null;
+
     final pair = PairModel(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: editingPair?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
       name: pairName,
       clothes: List.from(selectedClothes),
     );
@@ -59,10 +75,22 @@ class AddPairsScreenController extends StateController<AddPairsScreenBinding> {
     _repository.savePair(pair);
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("$pairName pair added successfully")),
+      SnackBar(content: Text("$pairName pair ${isEditing ? 'updated' : 'added'} successfully")),
     );
 
     Navigator.pop(context);
+  }
+
+  void deletePair(BuildContext context) {
+    HapticFeedback.mediumImpact();
+    final pair = editingPair;
+    if (pair != null) {
+      _repository.deletePair(pair);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("${pair.name} deleted successfully")),
+      );
+      Navigator.pop(context);
+    }
   }
 
   @override

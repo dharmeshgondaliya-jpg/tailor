@@ -27,63 +27,66 @@ class OrdersPage extends StatekitView<OrdersPageController> implements OrdersPag
     return StateBuilder<OrdersPageController>(
       controller: controller,
       builder: (context, controller, child) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 12),
-            // Search and Filter Row
-            Row(
-              children: [
-                Expanded(
-                  child: SearchField(
-                    searchController: controller.searchController,
-                    onTextChange: (text) => controller.updateSearch(text),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Stack(
-                  children: [
-                    IconButton(
-                      onPressed: () => _showFilterBottomSheet(context),
-                      style: IconButton.styleFrom(
-                        backgroundColor: Colors.grey.shade100,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                      icon: const Icon(Icons.filter_list_outlined),
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 12),
+              // Search and Filter Row
+              Row(
+                children: [
+                  Expanded(
+                    child: SearchField(
+                      searchController: controller.searchController,
+                      onTextChange: (text) => controller.updateSearch(text),
                     ),
-                    if (controller.selectedStatuses.isNotEmpty ||
-                        controller.selectedOrderDate != null ||
-                        controller.selectedCompletionDate != null)
-                      Positioned(
-                        right: 8,
-                        top: 8,
-                        child: Container(
-                          width: 8,
-                          height: 8,
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
+                  ),
+                  const SizedBox(width: 8),
+                  Stack(
+                    children: [
+                      IconButton(
+                        onPressed: () => _showFilterBottomSheet(context),
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.grey.shade100,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                        icon: const Icon(Icons.filter_list_outlined),
+                      ),
+                      if (controller.selectedStatuses.isNotEmpty ||
+                          controller.selectedOrderDate != null ||
+                          controller.selectedCompletionDate != null)
+                        Positioned(
+                          right: 8,
+                          top: 8,
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
                           ),
                         ),
-                      ),
-                  ],
-                ),
-                const SizedBox(width: 8),
-                IconButton(
-                  onPressed: () => controller.navigateToAddOrder(context),
-                  style: IconButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ],
                   ),
-                  icon: const Icon(Icons.add, color: Colors.white),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    onPressed: () => controller.navigateToAddOrder(context),
+                    style: IconButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                    icon: const Icon(Icons.add, color: Colors.white),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
 
-            // Orders List or Empty View
-            Expanded(child: _buildOrdersContent(controller)),
-          ],
+              // Orders List or Empty View
+              Expanded(child: _buildOrdersContent(controller)),
+            ],
+          ),
         );
       },
     );
@@ -107,6 +110,7 @@ class OrdersPage extends StatekitView<OrdersPageController> implements OrdersPag
           index: index,
           child: OrderCard(
             order: order,
+            onEdit: () => controller.navigateToEditOrder(context, order),
             onDelete: () => _showOrderDeleteConfirmation(context, order),
           ),
         );
@@ -408,8 +412,9 @@ class OrdersPage extends StatekitView<OrdersPageController> implements OrdersPag
 
 class OrderCard extends StatelessWidget {
   final OrderModel order;
+  final VoidCallback onEdit;
   final VoidCallback onDelete;
-  const OrderCard({super.key, required this.order, required this.onDelete});
+  const OrderCard({super.key, required this.order, required this.onEdit, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -435,217 +440,259 @@ class OrderCard extends StatelessWidget {
         break;
     }
 
-    return Card(
-      elevation: 0,
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: Colors.grey.shade200),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(order.customerName, style: AppTextStyle.boldBlack(fontSize: 16)),
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
+    Color paymentBgColor;
+    Color paymentTextColor;
+    switch (order.paymentStatus.toLowerCase()) {
+      case 'paid':
+        paymentBgColor = Colors.green.shade50;
+        paymentTextColor = Colors.green.shade700;
+        break;
+      case 'advance':
+        paymentBgColor = Colors.blue.shade50;
+        paymentTextColor = Colors.blue.shade700;
+        break;
+      case 'partial paid':
+      case 'advance partial':
+        paymentBgColor = Colors.teal.shade50;
+        paymentTextColor = Colors.teal.shade700;
+        break;
+      case 'unpaid':
+      default:
+        paymentBgColor = Colors.orange.shade50;
+        paymentTextColor = Colors.orange.shade800;
+        break;
+    }
+
+    return GestureDetector(
+      onTap: onEdit,
+      child: Card(
+        elevation: 0,
+        margin: const EdgeInsets.only(bottom: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: Colors.grey.shade200),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(order.customerName, style: AppTextStyle.boldBlack(fontSize: 16)),
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          order.orderNumber,
+                          style: AppTextStyle.mediumBlack(
+                            fontSize: 12,
+                          ).copyWith(color: Colors.grey.shade700),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      IconButton(
+                        onPressed: onDelete,
+                        constraints: const BoxConstraints(),
+                        padding: EdgeInsets.zero,
+                        icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: statusBgColor,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      order.status,
+                      style: AppTextStyle.mediumBlack(
+                        fontSize: 12,
+                      ).copyWith(color: statusTextColor),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: paymentBgColor,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      order.paymentStatus,
+                      style: AppTextStyle.mediumBlack(
+                        fontSize: 12,
+                      ).copyWith(color: paymentTextColor),
+                    ),
+                  ),
+                  if (order.isUrgent) ...[
+                    const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
+                        color: Colors.red.shade50,
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      child: Text(
-                        order.orderNumber,
-                        style: AppTextStyle.mediumBlack(
-                          fontSize: 12,
-                        ).copyWith(color: Colors.grey.shade700),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.flash_on_rounded, size: 14, color: Colors.red.shade700),
+                          const SizedBox(width: 4),
+                          Text(
+                            "Urgent",
+                            style: AppTextStyle.mediumBlack(
+                              fontSize: 12,
+                            ).copyWith(color: Colors.red.shade700),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(width: 4),
-                    IconButton(
-                      onPressed: onDelete,
-                      constraints: const BoxConstraints(),
-                      padding: EdgeInsets.zero,
-                      icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                  ],
+                  if (order.isOverdue) ...[
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.warning_amber_rounded, size: 14, color: Colors.red.shade700),
+                          const SizedBox(width: 4),
+                          Text(
+                            "Overdue",
+                            style: AppTextStyle.mediumBlack(
+                              fontSize: 12,
+                            ).copyWith(color: Colors.red.shade700),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: statusBgColor,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    order.status,
-                    style: AppTextStyle.mediumBlack(fontSize: 12).copyWith(color: statusTextColor),
-                  ),
-                ),
-                if (order.isUrgent) ...[
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.red.shade50,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.flash_on_rounded, size: 14, color: Colors.red.shade700),
-                        const SizedBox(width: 4),
-                        Text(
-                          "Urgent",
-                          style: AppTextStyle.mediumBlack(
-                            fontSize: 12,
-                          ).copyWith(color: Colors.red.shade700),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
-                if (order.isOverdue) ...[
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.red.shade50,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.warning_amber_rounded, size: 14, color: Colors.red.shade700),
-                        const SizedBox(width: 4),
-                        Text(
-                          "Overdue",
-                          style: AppTextStyle.mediumBlack(
-                            fontSize: 12,
-                          ).copyWith(color: Colors.red.shade700),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ],
-            ),
-            const SizedBox(height: 12),
-            const Divider(),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Labour / Paid",
-                      style: AppTextStyle.regularBlack(
-                        fontSize: 12,
-                      ).copyWith(color: Colors.grey.shade500),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      "₹${order.laborCost.toStringAsFixed(0)} (Paid ₹${order.advanceAmount.toStringAsFixed(0)})",
-                      style: AppTextStyle.boldBlack(
-                        fontSize: 14,
-                      ).copyWith(color: AppColors.primaryColor),
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "Quantity",
-                      style: AppTextStyle.regularBlack(
-                        fontSize: 12,
-                      ).copyWith(color: Colors.grey.shade500),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      "${order.quantity} x (${order.clothesName})",
-                      style: AppTextStyle.semiBoldBlack(fontSize: 14),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.calendar_today_outlined, size: 14, color: Colors.grey.shade500),
-                    const SizedBox(width: 4),
-                    Text(
-                      "Ordered: ${DateFormat('dd/MM/yyyy').format(order.orderDate)}",
-                      style: AppTextStyle.regularBlack(
-                        fontSize: 12,
-                      ).copyWith(color: Colors.grey.shade600),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.assignment_turned_in_outlined,
-                      size: 14,
-                      color: Colors.grey.shade500,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      "Delivery: ${DateFormat('dd/MM/yyyy').format(order.completionDate)}",
-                      style: AppTextStyle.regularBlack(
-                        fontSize: 12,
-                      ).copyWith(color: Colors.grey.shade600),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            if (order.notes != null && order.notes!.isNotEmpty) ...[
+              ),
               const SizedBox(height: 12),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(Icons.notes, size: 14, color: Colors.grey.shade600),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        order.notes!,
+              const Divider(),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Labour / Paid",
                         style: AppTextStyle.regularBlack(
                           fontSize: 12,
-                        ).copyWith(color: Colors.grey.shade700, fontStyle: FontStyle.italic),
+                        ).copyWith(color: Colors.grey.shade500),
                       ),
-                    ),
-                  ],
-                ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "₹${order.laborCost.toStringAsFixed(0)} (Paid ₹${order.advanceAmount.toStringAsFixed(0)})",
+                        style: AppTextStyle.boldBlack(
+                          fontSize: 14,
+                        ).copyWith(color: AppColors.primaryColor),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        "Quantity",
+                        style: AppTextStyle.regularBlack(
+                          fontSize: 12,
+                        ).copyWith(color: Colors.grey.shade500),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "${order.quantity} x (${order.clothesName})",
+                        style: AppTextStyle.semiBoldBlack(fontSize: 14),
+                      ),
+                    ],
+                  ),
+                ],
               ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.calendar_today_outlined, size: 14, color: Colors.grey.shade500),
+                      const SizedBox(width: 4),
+                      Text(
+                        "Ordered: ${DateFormat('dd/MM/yyyy').format(order.orderDate)}",
+                        style: AppTextStyle.regularBlack(
+                          fontSize: 12,
+                        ).copyWith(color: Colors.grey.shade600),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.assignment_turned_in_outlined,
+                        size: 14,
+                        color: Colors.grey.shade500,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        "Delivery: ${DateFormat('dd/MM/yyyy').format(order.completionDate)}",
+                        style: AppTextStyle.regularBlack(
+                          fontSize: 12,
+                        ).copyWith(color: Colors.grey.shade600),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              if (order.notes != null && order.notes!.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.notes, size: 14, color: Colors.grey.shade600),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          order.notes!,
+                          style: AppTextStyle.regularBlack(
+                            fontSize: 12,
+                          ).copyWith(color: Colors.grey.shade700, fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

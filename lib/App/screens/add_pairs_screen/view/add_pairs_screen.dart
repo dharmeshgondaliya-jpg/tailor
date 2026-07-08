@@ -8,6 +8,7 @@ import '../../base_screen/view/custom_appbar.dart';
 import '../../../widgets/app_textfield.dart';
 import '../binding/add_pairs_screen_binding.dart';
 import '../controller/add_pairs_screen_controller.dart';
+import '../../pairs_listing_screen/model/pair_model.dart';
 
 class AddPairsScreen extends StatekitView<AddPairsScreenController> implements AddPairsScreenBinding {
   AddPairsScreen({super.key, super.tag});
@@ -15,23 +16,39 @@ class AddPairsScreen extends StatekitView<AddPairsScreenController> implements A
   @override
   void initState() {
     controller.binding = this;
-    controller.initData();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = ModalRoute.of(context)!.settings.arguments;
+      if (args is PairModel) {
+        controller.initData(pair: args);
+      } else {
+        controller.initData();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreen(
-      appBar: const CustomAppbar(
-        title: Text(
-          "Add Pair",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: StateBuilder<AddPairsScreenController>(
-        controller: controller,
-        builder: (context, controller, child) {
-          return Column(
+    return StateBuilder<AddPairsScreenController>(
+      controller: controller,
+      builder: (context, controller, child) {
+        final isEditing = controller.editingPair != null;
+        return BaseScreen(
+          appBar: CustomAppbar(
+            title: Text(
+              isEditing ? "Edit Pair" : "Add Pair",
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            actions: isEditing
+                ? [
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline, color: Colors.white),
+                      onPressed: () => _showDeleteConfirmation(context),
+                    ),
+                  ]
+                : null,
+          ),
+          body: Column(
             children: [
               Expanded(
                 child: SingleChildScrollView(
@@ -154,15 +171,54 @@ class AddPairsScreen extends StatekitView<AddPairsScreenController> implements A
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   child: Text(
-                    "Save Pair",
+                    isEditing ? "Update Pair" : "Save Pair",
                     style: AppTextStyle.mediumBlack(fontSize: 14).copyWith(color: Colors.white),
                   ),
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Delete Pair", style: AppTextStyle.boldBlack(fontSize: 18)),
+          content: Text(
+            "Are you sure you want to delete ${controller.editingPair?.name}? This action cannot be undone.",
+            style: AppTextStyle.regularBlack(fontSize: 14).copyWith(color: Colors.grey.shade700),
+          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                "Cancel",
+                style: AppTextStyle.mediumBlack(fontSize: 14).copyWith(color: Colors.grey),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context); // Pop dialog
+                controller.deletePair(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: Text(
+                "Delete",
+                style: AppTextStyle.mediumBlack(fontSize: 14).copyWith(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

@@ -11,4 +11,6 @@ abstract class Routes {
   static const String pairsListingScreen = "/pairsListingScreen";
   static const String measurementScreen = "/measurementScreen";
   static const String measurementHistoryScreen = "/measurementHistoryScreen";
+  static const String customerDetailsScreen = "/customerDetailsScreen";
+  static const String billPreviewScreen = "/billPreviewScreen";
 }

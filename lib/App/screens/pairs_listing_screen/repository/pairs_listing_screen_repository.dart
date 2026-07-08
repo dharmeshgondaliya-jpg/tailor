@@ -42,6 +42,15 @@ class PairsListingScreenRepository {
   }
 
   void addPair(PairModel pair) {
-    _pairs.add(pair);
+    final index = _pairs.indexWhere((p) => p.id == pair.id);
+    if (index >= 0) {
+      _pairs[index] = pair;
+    } else {
+      _pairs.add(pair);
+    }
+  }
+
+  void deletePair(PairModel pair) {
+    _pairs.removeWhere((p) => p.id == pair.id);
   }
 }

@@ -123,6 +123,11 @@ class OrdersPageController extends StateController<OrdersPageBinding> {
     fetchInitData();
   }
 
+  Future<void> navigateToEditOrder(BuildContext context, OrderModel order) async {
+    await Navigator.pushNamed(context, Routes.addOrderScreen, arguments: order);
+    fetchInitData();
+  }
+
   void deleteOrder(OrderModel order) {
     _repository.deleteOrder(order);
     fetchInitData();

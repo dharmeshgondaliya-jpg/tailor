@@ -7,4 +7,8 @@ class AddOrderScreenRepository {
   void saveOrder(OrderModel order) {
     _ordersRepository.addOrder(order);
   }
+
+  void deleteOrder(OrderModel order) {
+    _ordersRepository.deleteOrder(order);
+  }
 }

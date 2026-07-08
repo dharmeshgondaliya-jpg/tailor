@@ -22,27 +22,45 @@ class AddClothesScreenController extends StateController<AddClothesScreenBinding
   final TextEditingController nameController = TextEditingController();
   final List<MeasurementFieldEdit> fields = [];
 
-  void initData() {
+  ClothModel? editingCloth;
+
+  void initData({ClothModel? cloth}) {
     nameController.clear();
     for (final field in fields) {
       field.dispose();
     }
     fields.clear();
-    // Initially 3 fields with 'inches' type
-    fields.addAll([
-      MeasurementFieldEdit(
-        nameController: TextEditingController(text: "Length"),
-        type: "inches",
-      ),
-      MeasurementFieldEdit(
-        nameController: TextEditingController(text: "Chest"),
-        type: "inches",
-      ),
-      MeasurementFieldEdit(
-        nameController: TextEditingController(text: "Waist"),
-        type: "inches",
-      ),
-    ]);
+
+    if (cloth != null) {
+      editingCloth = cloth;
+      nameController.text = cloth.name;
+      for (final f in cloth.measurementFields) {
+        fields.add(
+          MeasurementFieldEdit(
+            nameController: TextEditingController(text: f.name),
+            type: f.type,
+          ),
+        );
+      }
+    } else {
+      editingCloth = null;
+      // Initially 3 fields with 'inches' type
+      fields.addAll([
+        MeasurementFieldEdit(
+          nameController: TextEditingController(text: "Length"),
+          type: "inches",
+        ),
+        MeasurementFieldEdit(
+          nameController: TextEditingController(text: "Chest"),
+          type: "inches",
+        ),
+        MeasurementFieldEdit(
+          nameController: TextEditingController(text: "Waist"),
+          type: "inches",
+        ),
+      ]);
+    }
+    update();
   }
 
   void addField() {
@@ -98,19 +116,33 @@ class AddClothesScreenController extends StateController<AddClothesScreenBinding
         .map((f) => ClothMeasurementField(name: f.nameController.text.trim(), type: f.type))
         .toList();
 
+    final isEditing = editingCloth != null;
+
     final cloth = ClothModel(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: editingCloth?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
       name: clothName,
       measurementFields: measurementFields,
     );
 
     _repository.saveCloth(cloth);
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text("$clothName added successfully")));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("$clothName ${isEditing ? 'updated' : 'added'} successfully")),
+    );
 
     Navigator.pop(context);
+  }
+
+  void deleteCloth(BuildContext context) {
+    HapticFeedback.mediumImpact();
+    final cloth = editingCloth;
+    if (cloth != null) {
+      _repository.deleteCloth(cloth);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("${cloth.name} deleted successfully")),
+      );
+      Navigator.pop(context);
+    }
   }
 
   @override

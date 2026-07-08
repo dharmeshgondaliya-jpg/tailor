@@ -7,4 +7,8 @@ class AddPairsScreenRepository {
   void savePair(PairModel pair) {
     _listingRepository.addPair(pair);
   }
+
+  void deletePair(PairModel pair) {
+    _listingRepository.deletePair(pair);
+  }
 }

@@ -9,6 +9,7 @@ class OrderModel {
   final bool isUrgent;
   final int quantity;
   final String clothesName;
+  final String paymentStatus; // 'Unpaid', 'Advance', 'Partial Paid', 'Paid'
   final String? notes;
 
   OrderModel({
@@ -22,6 +23,7 @@ class OrderModel {
     this.isUrgent = false,
     required this.quantity,
     required this.clothesName,
+    required this.paymentStatus,
     this.notes,
   });
 

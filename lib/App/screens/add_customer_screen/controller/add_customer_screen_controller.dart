@@ -21,6 +21,27 @@ class AddCustomerScreenController extends StateController<AddCustomerScreenBindi
     update();
   }
 
+  CustomerModel? editingCustomer;
+
+  void initData({CustomerModel? customer}) {
+    if (customer != null) {
+      editingCustomer = customer;
+      nameController.text = customer.name;
+      phoneController.text = customer.phone;
+      addressController.text = customer.address;
+      notesController.text = customer.notes ?? "";
+      isRegular = customer.isRegular;
+    } else {
+      editingCustomer = null;
+      nameController.clear();
+      phoneController.clear();
+      addressController.clear();
+      notesController.clear();
+      isRegular = false;
+    }
+    update();
+  }
+
   void saveCustomer(BuildContext context) {
     HapticFeedback.mediumImpact();
     final name = nameController.text.trim();
@@ -49,6 +70,8 @@ class AddCustomerScreenController extends StateController<AddCustomerScreenBindi
       return;
     }
 
+    final isEditing = editingCustomer != null;
+
     final customer = CustomerModel(
       name: name,
       phone: phone,
@@ -57,13 +80,25 @@ class AddCustomerScreenController extends StateController<AddCustomerScreenBindi
       isRegular: isRegular,
     );
 
-    _repository.saveCustomer(customer);
+    _repository.saveCustomer(customer, originalName: editingCustomer?.name);
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Customer $name added successfully")),
+      SnackBar(content: Text("Customer $name ${isEditing ? 'updated' : 'added'} successfully")),
     );
 
     Navigator.pop(context);
+  }
+
+  void deleteCustomer(BuildContext context) {
+    HapticFeedback.mediumImpact();
+    final customer = editingCustomer;
+    if (customer != null) {
+      _repository.deleteCustomer(customer);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Customer ${customer.name} deleted successfully")),
+      );
+      Navigator.pop(context);
+    }
   }
 
   @override

@@ -7,6 +7,7 @@ import '../../base_screen/view/custom_appbar.dart';
 import '../../../widgets/app_textfield.dart';
 import '../binding/add_customer_screen_binding.dart';
 import '../controller/add_customer_screen_controller.dart';
+import '../../customers_page/model/customer_model.dart';
 
 class AddCustomerScreen extends StatekitView<AddCustomerScreenController> implements AddCustomerScreenBinding {
   AddCustomerScreen({super.key, super.tag});
@@ -15,21 +16,38 @@ class AddCustomerScreen extends StatekitView<AddCustomerScreenController> implem
   void initState() {
     controller.binding = this;
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = ModalRoute.of(context)!.settings.arguments;
+      if (args is CustomerModel) {
+        controller.initData(customer: args);
+      } else {
+        controller.initData();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreen(
-      appBar: const CustomAppbar(
-        title: Text(
-          "Add Customer",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: StateBuilder<AddCustomerScreenController>(
-        controller: controller,
-        builder: (context, controller, child) {
-          return Column(
+    return StateBuilder<AddCustomerScreenController>(
+      controller: controller,
+      builder: (context, controller, child) {
+        final isEditing = controller.editingCustomer != null;
+        return BaseScreen(
+          appBar: CustomAppbar(
+            title: Text(
+              isEditing ? "Edit Customer" : "Add Customer",
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            actions: isEditing
+                ? [
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline, color: Colors.white),
+                      onPressed: () => _showDeleteConfirmation(context),
+                    ),
+                  ]
+                : null,
+          ),
+          body: Column(
             children: [
               Expanded(
                 child: SingleChildScrollView(
@@ -144,15 +162,54 @@ class AddCustomerScreen extends StatekitView<AddCustomerScreenController> implem
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   child: Text(
-                    "Save Customer",
+                    isEditing ? "Update Customer" : "Save Customer",
                     style: AppTextStyle.mediumBlack(fontSize: 14).copyWith(color: Colors.white),
                   ),
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Delete Customer", style: AppTextStyle.boldBlack(fontSize: 18)),
+          content: Text(
+            "Are you sure you want to delete ${controller.editingCustomer?.name}? This action cannot be undone.",
+            style: AppTextStyle.regularBlack(fontSize: 14).copyWith(color: Colors.grey.shade700),
+          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                "Cancel",
+                style: AppTextStyle.mediumBlack(fontSize: 14).copyWith(color: Colors.grey),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context); // Pop dialog
+                controller.deleteCustomer(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: Text(
+                "Delete",
+                style: AppTextStyle.mediumBlack(fontSize: 14).copyWith(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

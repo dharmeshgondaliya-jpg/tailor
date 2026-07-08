@@ -7,4 +7,8 @@ class AddClothesScreenRepository {
   void saveCloth(ClothModel cloth) {
     _listingRepository.addCloth(cloth);
   }
+
+  void deleteCloth(ClothModel cloth) {
+    _listingRepository.deleteCloth(cloth);
+  }
 }
