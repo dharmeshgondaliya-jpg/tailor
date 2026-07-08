@@ -194,52 +194,117 @@ class BillPreviewScreen extends StatekitView<BillPreviewScreenController> implem
                       separatorBuilder: (context, index) => const Divider(),
                       itemBuilder: (context, index) {
                         final order = controller.unpaidOrders[index];
-                        final amount = order.laborCost * order.quantity;
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-                          child: Row(
+                        final hasCustomItems = order.items != null && order.items!.isNotEmpty;
+
+                        if (hasCustomItems) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                flex: 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(order.orderNumber, style: AppTextStyle.boldBlack(fontSize: 13)),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      order.clothesName,
-                                      style: AppTextStyle.regularBlack(fontSize: 12).copyWith(color: Colors.grey.shade600),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
                                 child: Text(
-                                  order.quantity.toString(),
-                                  textAlign: TextAlign.center,
-                                  style: AppTextStyle.regularBlack(fontSize: 13),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  "₹${order.laborCost.toStringAsFixed(0)}",
-                                  textAlign: TextAlign.right,
-                                  style: AppTextStyle.regularBlack(fontSize: 13),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  "₹${amount.toStringAsFixed(0)}",
-                                  textAlign: TextAlign.right,
+                                  "${order.orderNumber} (Person-wise Breakdowns)",
                                   style: AppTextStyle.boldBlack(fontSize: 13),
                                 ),
                               ),
+                              ...order.items!.map((item) {
+                                final amount = item.laborCost * item.quantity;
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 20.0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 3,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(item.personName, style: AppTextStyle.mediumBlack(fontSize: 12)),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              item.itemName,
+                                              style: AppTextStyle.regularBlack(fontSize: 11).copyWith(color: Colors.grey.shade600),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          item.quantity.toString(),
+                                          textAlign: TextAlign.center,
+                                          style: AppTextStyle.regularBlack(fontSize: 12),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(
+                                          "₹${item.laborCost.toStringAsFixed(0)}",
+                                          textAlign: TextAlign.right,
+                                          style: AppTextStyle.regularBlack(fontSize: 12),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(
+                                          "₹${amount.toStringAsFixed(0)}",
+                                          textAlign: TextAlign.right,
+                                          style: AppTextStyle.boldBlack(fontSize: 12),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
                             ],
-                          ),
-                        );
+                          );
+                        } else {
+                          final amount = order.laborCost * order.quantity;
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(order.orderNumber, style: AppTextStyle.boldBlack(fontSize: 13)),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        order.clothesName,
+                                        style: AppTextStyle.regularBlack(fontSize: 12).copyWith(color: Colors.grey.shade600),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    order.quantity.toString(),
+                                    textAlign: TextAlign.center,
+                                    style: AppTextStyle.regularBlack(fontSize: 13),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    "₹${order.laborCost.toStringAsFixed(0)}",
+                                    textAlign: TextAlign.right,
+                                    style: AppTextStyle.regularBlack(fontSize: 13),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    "₹${amount.toStringAsFixed(0)}",
+                                    textAlign: TextAlign.right,
+                                    style: AppTextStyle.boldBlack(fontSize: 13),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                       },
                     ),
                     const Divider(),

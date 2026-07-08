@@ -400,21 +400,50 @@ class _CustomerOrderCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10),
-            Row(
-              children: [
-                Icon(Icons.checkroom, size: 16, color: Colors.grey.shade600),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(order.clothesName, style: AppTextStyle.mediumBlack(fontSize: 14)),
-                ),
-                Text(
-                  "Qty: ${order.quantity}",
-                  style: AppTextStyle.regularBlack(
-                    fontSize: 13,
-                  ).copyWith(color: Colors.grey.shade600),
-                ),
-              ],
-            ),
+            if (order.items != null && order.items!.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              ...order.items!.map((item) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 6.0, bottom: 2.0),
+                  child: Row(
+                    children: [
+                      Icon(Icons.person_outline_rounded, size: 14, color: AppColors.primaryColor),
+                      const SizedBox(width: 6),
+                      Text(
+                        "${item.personName}: ",
+                        style: AppTextStyle.boldBlack(fontSize: 13),
+                      ),
+                      Expanded(
+                        child: Text(
+                          item.itemName,
+                          style: AppTextStyle.regularBlack(fontSize: 13).copyWith(color: Colors.grey.shade700),
+                        ),
+                      ),
+                      Text(
+                        "Qty: ${item.quantity}",
+                        style: AppTextStyle.regularBlack(fontSize: 12).copyWith(color: Colors.grey.shade600),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ] else ...[
+              Row(
+                children: [
+                  Icon(Icons.checkroom, size: 16, color: Colors.grey.shade600),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(order.clothesName, style: AppTextStyle.mediumBlack(fontSize: 14)),
+                  ),
+                  Text(
+                    "Qty: ${order.quantity}",
+                    style: AppTextStyle.regularBlack(
+                      fontSize: 13,
+                    ).copyWith(color: Colors.grey.shade600),
+                  ),
+                ],
+              ),
+            ],
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

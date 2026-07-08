@@ -15,6 +15,10 @@ class OrdersPageRepository {
       clothesName: "Shirt & Pant",
       paymentStatus: "Advance",
       notes: "Short sleeves on the shirt.",
+      items: [
+        OrderItemModel(personName: "John Connor", itemName: "Shirt", quantity: 1, laborCost: 200.0),
+        OrderItemModel(personName: "T-800", itemName: "Leather Jacket", quantity: 1, laborCost: 250.0),
+      ],
     ),
     OrderModel(
       orderNumber: "#ORD-102",
@@ -57,6 +61,10 @@ class OrdersPageRepository {
       clothesName: "Salwar Kameez",
       paymentStatus: "Partial Paid",
       notes: "Needs lace borders on the dupatta.",
+      items: [
+        OrderItemModel(personName: "Clark Kent", itemName: "Suit", quantity: 1, laborCost: 400.0),
+        OrderItemModel(personName: "Lois Lane", itemName: "Blouse", quantity: 1, laborCost: 200.0),
+      ],
     ),
     OrderModel(
       orderNumber: "#ORD-105",

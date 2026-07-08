@@ -93,16 +93,32 @@ class BillPreviewScreenController extends StateController<BillPreviewScreenBindi
 
                 // Table of Orders
                 pw.TableHelper.fromTextArray(
-                  headers: ['Order #', 'Clothes/Pairs', 'Qty', 'Labor Cost (Rate)', 'Total'],
-                  data: unpaidOrders.map((order) {
-                    return [
-                      order.orderNumber,
-                      order.clothesName,
-                      order.quantity.toString(),
-                      "₹${order.laborCost.toStringAsFixed(0)}",
-                      "₹${(order.laborCost * order.quantity).toStringAsFixed(0)}",
-                    ];
-                  }).toList(),
+                  headers: ['Order #', 'Person / Item Name', 'Qty', 'Labor Cost', 'Total'],
+                  data: () {
+                    final List<List<String>> tableData = [];
+                    for (final order in unpaidOrders) {
+                      if (order.items != null && order.items!.isNotEmpty) {
+                        for (final item in order.items!) {
+                          tableData.add([
+                            order.orderNumber,
+                            "${item.personName} - ${item.itemName}",
+                            item.quantity.toString(),
+                            "₹${item.laborCost.toStringAsFixed(0)}",
+                            "₹${(item.laborCost * item.quantity).toStringAsFixed(0)}",
+                          ]);
+                        }
+                      } else {
+                        tableData.add([
+                          order.orderNumber,
+                          order.clothesName,
+                          order.quantity.toString(),
+                          "₹${order.laborCost.toStringAsFixed(0)}",
+                          "₹${(order.laborCost * order.quantity).toStringAsFixed(0)}",
+                        ]);
+                      }
+                    }
+                    return tableData;
+                  }(),
                   headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, color: PdfColors.white),
                   headerDecoration: const pw.BoxDecoration(color: PdfColors.blueGrey700),
                   cellHeight: 25,

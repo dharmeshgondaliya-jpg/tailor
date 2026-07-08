@@ -1,3 +1,17 @@
+class OrderItemModel {
+  final String personName;
+  final String itemName;
+  final int quantity;
+  final double laborCost;
+
+  OrderItemModel({
+    required this.personName,
+    required this.itemName,
+    required this.quantity,
+    required this.laborCost,
+  });
+}
+
 class OrderModel {
   final String orderNumber;
   final String customerName;
@@ -11,6 +25,7 @@ class OrderModel {
   final String clothesName;
   final String paymentStatus; // 'Unpaid', 'Advance', 'Partial Paid', 'Paid'
   final String? notes;
+  final List<OrderItemModel>? items;
 
   OrderModel({
     required this.orderNumber,
@@ -25,6 +40,7 @@ class OrderModel {
     required this.clothesName,
     required this.paymentStatus,
     this.notes,
+    this.items,
   });
 
   bool get isOverdue {
