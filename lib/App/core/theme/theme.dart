@@ -58,15 +58,21 @@ ThemeData lightTheme = ThemeData(
     color: Colors.white,
   ),
   appBarTheme: AppBarTheme(
-    backgroundColor: AppColors.primaryColor,
-    foregroundColor: Colors.white,
+    backgroundColor: AppColors.backgroundColor,
+    surfaceTintColor: Colors.transparent,
+    shadowColor: Colors.transparent,
+    foregroundColor: const Color(0xFF1F2937),
     elevation: 0,
+    scrolledUnderElevation: 0,
     centerTitle: false,
     titleTextStyle: GoogleFonts.poppins(
-      color: Colors.white,
-      fontSize: 18,
-      fontWeight: FontWeight.w600,
+      color: const Color(0xFF1F2937),
+      fontSize: 20,
+      fontWeight: FontWeight.w700,
+      letterSpacing: -0.3,
     ),
+    iconTheme: const IconThemeData(color: Color(0xFF1F2937)),
+    actionsIconTheme: const IconThemeData(color: Color(0xFF1F2937)),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(

@@ -28,10 +28,7 @@ class MeasurementScreen extends StatekitView<MeasurementScreenController> implem
   Widget build(BuildContext context) {
     return BaseScreen(
       appBar: const CustomAppbar(
-        title: Text(
-          "New Measurement",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
+        title: Text("New Measurement"),
       ),
       body: StateBuilder<MeasurementScreenController>(
         controller: controller,

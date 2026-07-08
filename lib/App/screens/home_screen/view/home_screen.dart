@@ -1,5 +1,6 @@
 import 'package:statekit/statekit.dart';
 import 'package:flutter/material.dart';
+import 'package:tailor/App/core/constants/color_constants.dart';
 import 'package:tailor/App/screens/base_screen/view/custom_appbar.dart';
 import '../../../widgets/app_drawer.dart';
 import '../../base_screen/view/base_screen.dart';
@@ -56,12 +57,29 @@ class HomeScreen extends StatekitView<HomeScreenController> implements HomeScree
       bottomNavigationBar: StateBuilder<HomeScreenController>(
         controller: controller,
         builder: (context, controller, child) {
-          return AnimatedSwitcher(
-            duration: Duration(milliseconds: 400),
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                top: BorderSide(color: Colors.grey.shade200, width: 1),
+              ),
+            ),
             child: BottomNavigationBar(
               currentIndex: controller.selectedIndex,
               onTap: controller.changeIndex,
               type: BottomNavigationBarType.fixed,
+              backgroundColor: Colors.white,
+              selectedItemColor: AppColors.primaryColor,
+              unselectedItemColor: const Color(0xFF9CA3AF),
+              selectedLabelStyle: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 11,
+              ),
+              unselectedLabelStyle: const TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 11,
+              ),
+              elevation: 0,
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.dashboard_outlined),

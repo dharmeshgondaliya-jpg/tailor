@@ -25,10 +25,7 @@ class PairsListingScreen extends StatekitView<PairsListingScreenController> impl
   Widget build(BuildContext context) {
     return BaseScreen(
       appBar: const CustomAppbar(
-        title: Text(
-          "Cloth Pairs",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
+        title: Text("Cloth Pairs"),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => controller.navigateToAddPairs(context),

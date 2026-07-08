@@ -34,14 +34,11 @@ class AddCustomerScreen extends StatekitView<AddCustomerScreenController> implem
         final isEditing = controller.editingCustomer != null;
         return BaseScreen(
           appBar: CustomAppbar(
-            title: Text(
-              isEditing ? "Edit Customer" : "Add Customer",
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
+            title: Text(isEditing ? "Edit Customer" : "Add Customer"),
             actions: isEditing
                 ? [
                     IconButton(
-                      icon: const Icon(Icons.delete_outline, color: Colors.white),
+                      icon: const Icon(Icons.delete_outline),
                       onPressed: () => _showDeleteConfirmation(context),
                     ),
                   ]

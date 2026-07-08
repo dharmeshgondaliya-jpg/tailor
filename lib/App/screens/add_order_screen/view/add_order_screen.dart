@@ -37,14 +37,11 @@ class AddOrderScreen extends StatekitView<AddOrderScreenController>
         final isEditing = controller.editingOrder != null;
         return BaseScreen(
           appBar: CustomAppbar(
-            title: Text(
-              isEditing ? "Edit Order" : "Add Order",
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
+            title: Text(isEditing ? "Edit Order" : "Add Order"),
             actions: isEditing
                 ? [
                     IconButton(
-                      icon: const Icon(Icons.delete_outline, color: Colors.white),
+                      icon: const Icon(Icons.delete_outline),
                       onPressed: () => _showDeleteConfirmation(context),
                     ),
                   ]

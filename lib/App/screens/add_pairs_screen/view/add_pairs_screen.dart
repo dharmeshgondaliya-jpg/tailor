@@ -35,14 +35,11 @@ class AddPairsScreen extends StatekitView<AddPairsScreenController> implements A
         final isEditing = controller.editingPair != null;
         return BaseScreen(
           appBar: CustomAppbar(
-            title: Text(
-              isEditing ? "Edit Pair" : "Add Pair",
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
+            title: Text(isEditing ? "Edit Pair" : "Add Pair"),
             actions: isEditing
                 ? [
                     IconButton(
-                      icon: const Icon(Icons.delete_outline, color: Colors.white),
+                      icon: const Icon(Icons.delete_outline),
                       onPressed: () => _showDeleteConfirmation(context),
                     ),
                   ]

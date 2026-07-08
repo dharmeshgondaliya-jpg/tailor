@@ -32,10 +32,7 @@ class MeasurementHistoryScreen extends StatekitView<MeasurementHistoryScreenCont
   Widget build(BuildContext context) {
     return BaseScreen(
       appBar: const CustomAppbar(
-        title: Text(
-          "Measurement History",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
+        title: Text("Measurement History"),
       ),
       body: StateBuilder<MeasurementHistoryScreenController>(
         controller: controller,

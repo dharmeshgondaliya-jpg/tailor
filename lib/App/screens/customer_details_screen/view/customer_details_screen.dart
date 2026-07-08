@@ -51,7 +51,7 @@ class CustomerDetailsScreen extends StatekitView<CustomerDetailsScreenController
             title: const Text("Customer Details"),
             actions: [
               IconButton(
-                icon: const Icon(Icons.edit_outlined, color: Colors.white),
+                icon: const Icon(Icons.edit_outlined),
                 onPressed: () => controller.navigateToEditCustomer(context),
               ),
             ],

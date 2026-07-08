@@ -25,10 +25,7 @@ class ClothesListingScreen extends StatekitView<ClothesListingScreenController> 
   Widget build(BuildContext context) {
     return BaseScreen(
       appBar: const CustomAppbar(
-        title: Text(
-          "Clothes",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
+        title: Text("Clothes"),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => controller.navigateToAddClothes(context),

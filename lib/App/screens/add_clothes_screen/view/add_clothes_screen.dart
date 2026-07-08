@@ -35,14 +35,11 @@ class AddClothesScreen extends StatekitView<AddClothesScreenController>
         final isEditing = controller.editingCloth != null;
         return BaseScreen(
           appBar: CustomAppbar(
-            title: Text(
-              isEditing ? "Edit Cloth" : "Add Cloth",
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
+            title: Text(isEditing ? "Edit Cloth" : "Add Cloth"),
             actions: isEditing
                 ? [
                     IconButton(
-                      icon: const Icon(Icons.delete_outline, color: Colors.white),
+                      icon: const Icon(Icons.delete_outline),
                       onPressed: () => _showDeleteConfirmation(context),
                     ),
                   ]
